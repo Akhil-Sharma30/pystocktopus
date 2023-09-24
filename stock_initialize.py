@@ -91,10 +91,6 @@ class csv_data_extractor:
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
-
-    
-
-
 class stock:
     #Initializing the parameters for the stock preditions
     ticker: List[str]=input("Give your stock name {eg: Apple:APPL}: ")
