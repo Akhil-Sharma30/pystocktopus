@@ -5,6 +5,7 @@ from typing import cast,List
 from urllib3 import HTTPResponse
 import json
 import csv
+import pandas as pd
 
 # API Declarations
 API_Key = config.api_key
@@ -94,6 +95,28 @@ class csv_data_extractor:
     results = []
     for bought, ticker in zip(bought_values, stock.close_list):
         results.append(float(bought) * float(ticker))
+
+    # Update the csv with predicted and calculated values
+    def update_csv(csv_path: str,results : List[float]) -> None:
+        try:
+            # Read the CSV file into a pandas DataFrame
+            df = pd.read_csv(csv_path)
+            
+            if 'price' not in df.columns:
+                print("No 'price' column found in the CSV file.")
+            else:
+                # Add the values from 'results' under the "price" 
+                df.loc[:1, 'price'] = results
+
+                # Write the updated DataFrame back to the CSV file
+                df.to_csv(csv_data_extractor.csv_file, index=False)
+                
+                print("Float values added to the 'price' column in the CSV file.")
+            
+        except FileNotFoundError:
+            print(f"File '{csv_data_extractor.csv_file}' not found.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
 
 class stock:
     #Initializing the parameters for the stock preditions
