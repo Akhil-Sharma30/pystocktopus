@@ -91,6 +91,10 @@ class csv_data_extractor:
     except Exception as e:
         print(f"An error occurred: {str(e)}")
 
+    results = []
+    for bought, ticker in zip(bought_values, stock.close_list):
+        results.append(float(bought) * float(ticker))
+
 class stock:
     #Initializing the parameters for the stock preditions
     ticker: List[str]=input("Give your stock name {eg: Apple:APPL}: ")
