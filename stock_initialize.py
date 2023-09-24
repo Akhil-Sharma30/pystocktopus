@@ -9,3 +9,5 @@ import json
 API_Key = config.api_key
 client = RESTClient(api_key=API_Key)
 
+class stock:
+    
