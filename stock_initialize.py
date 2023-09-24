@@ -16,3 +16,19 @@ class stock:
     multiplier: int = input("Give size of the timespan multiplier {eg: 1}: ")
     start_date: str = input("Give the starting date {format '2023-0X-XX'} : ")
     end_date: str = input("Give the ending date {format '2023-0X-XX'} : ")
+
+    data_Collection = cast(
+        HTTPResponse,
+        client.get_aggs(
+            ticker,
+            int(multiplier),
+            timespan,
+            start_date,
+            end_date,
+            raw=True
+        ),
+    )
+    data_Processing = json.loads(data_Collection.data)
+    print(data_Processing)
+
+    
