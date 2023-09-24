@@ -15,6 +15,8 @@ class csv_data_extractor:
     # Initialize the variable for the csv path finder
     csv_path = input("Enter the path for the csv file: ")
 
+    csv_ticker_column_name = input("Enter the name of ticker column in the csv: ")
+    csv_stock_bought_column_data =input("Enter the name of column in the csv having the stock bought amount: ")
     # Open the CSV file for reading
     csv_file = csv_path  # Replace with your CSV file's path
 
@@ -29,7 +31,7 @@ class csv_data_extractor:
             # Find the index of the 'tickers' column
             ticker_column_index = -1
             for i, col_name in enumerate(header):
-                if col_name.lower() == 'tickers':
+                if col_name.lower() == csv_ticker_column_name:
                     ticker_column_index = i
             
             if ticker_column_index != -1:
@@ -54,6 +56,41 @@ class csv_data_extractor:
         print(f"File '{csv_file}' not found.")
     except Exception as e:
         print(f"An error occurred: {str(e)}")
+
+    try:
+        with open(csv_file, 'r') as file:
+            csv_reader = csv.reader(file)
+            
+            # Read the header row to get column names
+            header = next(csv_reader)
+            
+            # Find the index of the 'bought' column
+            bought_column_index = -1
+            for i, col_name in enumerate(header):
+                if col_name.lower() == csv_stock_bought_column_data:
+                    bought_column_index = i
+            
+            if bought_column_index != -1:
+                # Initialize a list to store the values in the 'bought' column
+                bought_values = []
+
+                # Read the data from the 'bought' column
+                for row in csv_reader:
+                    if bought_column_index < len(row):
+                        bought_values.append(row[bought_column_index])
+                
+                # Print the selected column values
+                print("Values in the 'bought' column:")
+                for value in bought_values:
+                    print(value)
+            else:
+                print("No 'bought' column found.")
+        
+    except FileNotFoundError:
+        print(f"File '{csv_file}' not found.")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
 
     
 
