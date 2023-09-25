@@ -133,30 +133,31 @@ class stock:
     # Initialize the closing price variable 
     close_list=[]
 
-    #Checking if it is empty or not
-    if close_list:
-        close_list = []
+    def ticker_data_collection(ticker: str,timespan: str,multiplier: int,start_date: str,end_date: str) -> None:
+        #Checking if it is empty or not
+        if close_list:
+            close_list = []
 
-    # Iterate through each tickers and store the value of the closing date
-    for ticker in csv_data_extractor.ticker_values:
-        aggs = client.get_aggs(
-            ticker,
-            int(multiplier),
-            timespan,
-            start_date,
-            end_date,
-            raw=True
-        )
-        
-        data = json.loads(aggs.data)
-        
-        if "results" in data:
-            raw_data_stock = data["results"]
+        # Iterate through each tickers and store the value of the closing date
+        for ticker in csv_data_extractor.ticker_values:
+            aggs = client.get_aggs(
+                ticker,
+                int(multiplier),
+                timespan,
+                start_date,
+                end_date,
+                raw=True
+            )
             
-            for bar in raw_data_stock:
-                if "c" in bar:
-                    close_list.append(bar["c"])
+            data = json.loads(aggs.data)
+            
+            if "results" in data:
+                raw_data_stock = data["results"]
+                
+                for bar in raw_data_stock:
+                    if "c" in bar:
+                        close_list.append(bar["c"])
 
-    # Debugging intialized 
-    #print(close_list)
-    
+        # Debugging intialized 
+        #print(close_list)
+        
