@@ -1,0 +1,7 @@
+-U polygon-api-client
+statsmodels
+pmdarima
+urllib3
+typing
+pandas
+
