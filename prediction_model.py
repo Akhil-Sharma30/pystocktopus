@@ -56,6 +56,7 @@ class model_stock:
 
         return model,forecast,Low_predictions,High_predictions
 
+    #Create a comparsion graph for the data 
     def model_prediction_analysis(test_data: any,steps: str,forecast: list,lower_predictions: list,high_predictions: list)-> None:
         plt.figure(figsize=(16,8))
         plt.plot(test_data[:int(steps)], label="actual")
