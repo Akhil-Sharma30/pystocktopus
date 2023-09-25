@@ -21,80 +21,84 @@ class csv_data_extractor:
     # Open the CSV file for reading
     csv_file = csv_path  # Replace with your CSV file's path
 
-    # Reading the data inside the ticker column in the csv
-    try:
-        with open(csv_file, 'r') as file:
-            csv_reader = csv.reader(file)
-            
-            # Read the header row to get column names
-            header = next(csv_reader)
-            
-            # Find the index of the 'tickers' column
-            ticker_column_index = -1
-            for i, col_name in enumerate(header):
-                if col_name.lower() == csv_ticker_column_name:
-                    ticker_column_index = i
-            
-            if ticker_column_index != -1:
-                # Initialize a list to store the values in the 'tickers' column
-                ticker_values = []
-
-                # Read the data from the 'tickers' column
-                for row in csv_reader:
-                    if ticker_column_index < len(row):
-                        ticker_values.append(row[ticker_column_index])
+    def csv_ticker_store(csv_file,csv_ticker_column_name):
+        # Reading the data inside the ticker column in the csv
+        try:
+            with open(csv_file, 'r') as file:
+                csv_reader = csv.reader(file)
                 
-                # Print the selected column values
-                print("Values in the 'tickers' column:")
-                for value in ticker_values:
-                    print(value)
-            else:
-                print("No 'tickers' column found.")
-            
-            # You can use the ticker_values list in your further processing
-            
-    except FileNotFoundError:
-        print(f"File '{csv_file}' not found.")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-
-    try:
-        with open(csv_file, 'r') as file:
-            csv_reader = csv.reader(file)
-            
-            # Read the header row to get column names
-            header = next(csv_reader)
-            
-            # Find the index of the 'bought' column
-            bought_column_index = -1
-            for i, col_name in enumerate(header):
-                if col_name.lower() == csv_stock_bought_column_data:
-                    bought_column_index = i
-            
-            if bought_column_index != -1:
-                # Initialize a list to store the values in the 'bought' column
-                bought_values = []
-
-                # Read the data from the 'bought' column
-                for row in csv_reader:
-                    if bought_column_index < len(row):
-                        bought_values.append(row[bought_column_index])
+                # Read the header row to get column names
+                header = next(csv_reader)
                 
-                # Print the selected column values
-                print("Values in the 'bought' column:")
-                for value in bought_values:
-                    print(value)
-            else:
-                print("No 'bought' column found.")
-        
-    except FileNotFoundError:
-        print(f"File '{csv_file}' not found.")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
+                # Find the index of the 'tickers' column
+                ticker_column_index = -1
+                for i, col_name in enumerate(header):
+                    if col_name.lower() == csv_ticker_column_name:
+                        ticker_column_index = i
+                
+                if ticker_column_index != -1:
+                    # Initialize a list to store the values in the 'tickers' column
+                    ticker_values = []
 
-    results = []
-    for bought, ticker in zip(bought_values, stock.close_list):
-        results.append(float(bought) * float(ticker))
+                    # Read the data from the 'tickers' column
+                    for row in csv_reader:
+                        if ticker_column_index < len(row):
+                            ticker_values.append(row[ticker_column_index])
+                    
+                    # Print the selected column values
+                    print("Values in the 'tickers' column:")
+                    for value in ticker_values:
+                        print(value)
+                else:
+                    print("No 'tickers' column found.")
+                
+                # You can use the ticker_values list in your further processing
+                
+        except FileNotFoundError:
+            print(f"File '{csv_file}' not found.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
+    def csv_share_bought_store(csv_file: str,csv_stock_bought_column_data: str) -> None:
+        try:
+            with open(csv_file, 'r') as file:
+                csv_reader = csv.reader(file)
+                
+                # Read the header row to get column names
+                header = next(csv_reader)
+                
+                # Find the index of the 'bought' column
+                bought_column_index = -1
+                for i, col_name in enumerate(header):
+                    if col_name.lower() == csv_stock_bought_column_data:
+                        bought_column_index = i
+                
+                if bought_column_index != -1:
+                    # Initialize a list to store the values in the 'bought' column
+                    bought_values = []
+
+                    # Read the data from the 'bought' column
+                    for row in csv_reader:
+                        if bought_column_index < len(row):
+                            bought_values.append(row[bought_column_index])
+                    
+                    # Print the selected column values
+                    print("Values in the 'bought' column:")
+                    for value in bought_values:
+                        print(value)
+                else:
+                    print("No 'bought' column found.")
+            
+        except FileNotFoundError:
+            print(f"File '{csv_file}' not found.")
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
+
+    def combine_data_csv() -> List[float]:
+        results = []
+        for bought, closing_price in zip(bought_values, stock.close_list):
+            results.append(float(bought) * float(closing_price))
+        return results
 
     # Update the csv with predicted and calculated values
     def update_csv(csv_path: str,results : List[float]) -> None:
