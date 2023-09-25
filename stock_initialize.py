@@ -1,5 +1,5 @@
 from polygon import RESTClient
-import config
+from config import api_key
 import requests
 from typing import cast,List
 from urllib3 import HTTPResponse
@@ -8,8 +8,7 @@ import csv
 import pandas as pd
 
 # API Declarations
-API_Key = config.api_key
-client = RESTClient(api_key=API_Key)
+client = RESTClient(api_key=api_key)
 
 class csv_data_extractor:
 
@@ -94,7 +93,7 @@ class csv_data_extractor:
         except Exception as e:
             print(f"An error occurred: {str(e)}")
 
-    def combine_data_csv() -> List[float]:
+    def combine_data_csv(bought_values: float) -> List[float]:
         results = []
         for bought, closing_price in zip(bought_values, stock.close_list):
             results.append(float(bought) * float(closing_price))
@@ -160,4 +159,18 @@ class stock:
 
         # Debugging intialized 
         #print(close_list)
+
+    def close_list_csv(close_list: list)-> None:
+        if not close_list:
+            return  # Return early if close_list is empty
+
+        with open(csv_data_extractor.csv_file, 'w', newline='') as csvfile:
+            fieldnames = ['closing_stock_data']  # Heading for the CSV file
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+
+            writer.writeheader()  # Write the header row
+
+            for close_data in close_list:
+                writer.writerow({'closing_data': close_data})
+
         
