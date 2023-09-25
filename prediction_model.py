@@ -7,10 +7,13 @@ from stock_initialize import csv_data_extractor
 plt.style.use(style="seaborn")
 
 class model_stock:
-    def stock_data_analysis():
-        df = pd.read_csv(csv_data_extractor.csv_path)
+    def model_data(csv_path: any,row_name_for_closing_stock: str)-> any:
+        df = pd.read_csv(csv_path)
 
-        df_close_values = df['closing_stock_data'].copy
+        if row_name_for_closing_stock:
+            df_close_values = df[row_name_for_closing_stock].copy
+        else:
+            df_close_values = df['closing_stock_data'].copy
 
         #Check if the data is stationary or not
         stationary_check = adfuller(df_close_values.dropna())
@@ -20,10 +23,10 @@ class model_stock:
         else:
             p_value = ndiffs(df_close_values, test='adf')
     
-    #p_value-> is the number of autoregressive terms, 
-    # diff-> is the number of nonseasonal differences needed for stationarity, and. 
-    # lagg-> is the number of lagged forecast errors in the prediction equation.
-    def model_data(df_close_values,p_value: int,diff: int,lagg: int)-> any:
+        #p_value-> is the number of autoregressive terms, 
+        # diff-> is the number of nonseasonal differences needed for stationarity, and. 
+        # lagg-> is the number of lagged forecast errors in the prediction equation.
+
         #Splitting the model into train and test data
         number_of_testcases= int(len(df_close_values)*0.8)
         train_data = df_close_values[:number_of_testcases]
