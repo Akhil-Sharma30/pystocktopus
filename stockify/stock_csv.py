@@ -5,7 +5,6 @@ Stockify.
 """
 import csv
 from typing import List
-#from stock_analysis_tool import StockAnalyizer
 import pandas as pd
 import os
 
@@ -106,4 +105,3 @@ class CSVDataHandler:
         
         except Exception as e:
             print(f"An error occurred: {str(e)}")
-            
