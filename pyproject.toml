@@ -8,14 +8,14 @@ name = "stockify"
 authors = [
   { name = "Akhil Sharma", email = "akhilsharma.off@gmail.com" },
 ]
-description = "help you maintain your stock dashboard and also predict future for a stock based upon past data"
+description = "help you maintain your stock dashboard also predict future for a stock based upon past data and also use the news sentiments of stocks volatality" 
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
   "Development Status :: 1 - Planning",
   "Intended Audience :: Science/Research",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: BSD License",
+  "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
@@ -57,7 +57,7 @@ Changelog = "https://github.com/Akhil-Sharma30/stockify/releases"
 
 [tool.hatch]
 version.source = "vcs"
-build.hooks.vcs.version-file = "src/stockify/_version.py"
+build.hooks.vcs.version-file = "stockify/src/stockify/_version.py"
 envs.default.dependencies = [
   "pytest",
   "pytest-cov",
