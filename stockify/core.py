@@ -10,25 +10,9 @@ from urllib3 import HTTPResponse
 import json
 import csv
 import pandas as pd
-import stockify.config as config
 import datetime
 
 class StockExtractor:
-
-    def _CalculateStartDate(start_date_str):
-        try:
-            # Convert the start_date string to a datetime object
-            end_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
-            
-            # Calculate the end_date by subtracting 20 days from start_date
-            start_date = end_date - datetime.timedelta(days=10)
-            
-            # Convert the end_date to a string in the same format as the input
-            start_date_str = start_date.strftime('%Y-%m-%d')
-            
-            return start_date_str
-        except Exception as e:
-            print(f"An error occurred: {str(e)}")
 
     def ticker_data_collection(
                             ticker_values:List[str],
@@ -36,18 +20,18 @@ class StockExtractor:
                             multiplier: int,
                             user_date: str) -> List[float]:
 
-            start_date = StockExtractor._CalculateStartDate(user_date)
+            start_date = PastDays._CalculateDate(user_date,10)
 
             # Initialize the dictionary to store data
             ticker_data = {}
             
-            try:
-                if config.api_key:
+            # try:
+            #     if config.api_key is not None:
                     # API Declarations
-                    client: str = RESTClient(api_key=config.api_key)
-            except:
-                print(f"'{config.api_key}' not found. Could you specify in the stockify.config?") 
-                return
+            client: str = RESTClient(api_key=config.api_key)
+            # except:
+            #     print(f"'{config.api_key}' not found. Could you specify in the stockify.config?") 
+            #     return
             
             for ticker in ticker_values:
                 aggs_csv: Tuple[int, str, str, str] = client.get_aggs(
@@ -74,3 +58,20 @@ class StockExtractor:
 
             return ticker_data
     
+class PastDays:
+     
+     @staticmethod
+     def _CalculateDate(start_date_str,days_lag):
+        try:
+            # Convert the start_date string to a datetime object
+            end_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')
+            
+            # Calculate the end_date by subtracting 20 days from start_date
+            start_date = end_date - datetime.timedelta(days=days_lag)
+            
+            # Convert the end_date to a string in the same format as the input
+            start_date_str = start_date.strftime('%Y-%m-%d')
+            
+            return start_date_str
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
