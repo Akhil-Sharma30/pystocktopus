@@ -51,13 +51,28 @@ class CSVDataHandler:
 
         return data_values
 
+    @staticmethod
+    def _getValue(closing_price):
+        # Initialize a list to store the last values
+        last_values = []
+
+        # Iterate through the dictionary and extract the last value from each key
+        for key, value_list in closing_price.items():
+            if value_list:  # Check if the list is not empty
+                last_value = value_list[-1]
+                last_values.append(last_value)
+
+        return last_values
 
     #Combine the data of the bought shares ticker and closing price values
     @staticmethod
-    def combine_data_csv(data_values: List[float],close_list: List[float]) -> List[float]:
+    def combine_data_csv(data_values: List[float],close_list: Dict[float,float]) -> List[float]:
         
+        #Fetch the values in the Dict and store it in the list
+        data_extractor = CSVDataHandler._getValue(close_list)
+
         results: List[float]= []
-        for bought, closing_price in zip(data_values,close_list):
+        for bought, closing_price in zip(data_values,data_extractor):
             results.append(float(bought) * float(closing_price))
         return results
 
