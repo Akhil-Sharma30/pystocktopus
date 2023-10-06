@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import importlib.metadata
 
-import stockify as m
+import PyStoAnalyzer as m
 
 
 def test_version():
-    assert importlib.metadata.version("stockify") == m.__version__
+    assert importlib.metadata.version("PyStoAnalyzer") == m.__version__
