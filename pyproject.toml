@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 
 [project]
-name = "stockify"
+name = "PyStoAnalyzer"
 authors = [
   { name = "Akhil Sharma", email = "akhilsharma.off@gmail.com" },
 ]
@@ -46,18 +46,19 @@ docs = [
   "sphinx_copybutton",
   "sphinx_autodoc_typehints",
   "furo>=2023.08.17",
+  "mkdocs-material"
 ]
 
 [project.urls]
-Homepage = "https://github.com/Akhil-Sharma30/stockify"
-"Bug Tracker" = "https://github.com/Akhil-Sharma30/stockify/issues"
-Discussions = "https://github.com/Akhil-Sharma30/stockify/discussions"
-Changelog = "https://github.com/Akhil-Sharma30/stockify/releases"
+Homepage = "https://github.com/Akhil-Sharma30/PyStoAnalyzer"
+"Bug Tracker" = "https://github.com/Akhil-Sharma30/PyStoAnalyzer/issues"
+Discussions = "https://github.com/Akhil-Sharma30/PyStoAnalyzer/discussions"
+Changelog = "https://github.com/Akhil-Sharma30/PyStoAnalyzer/releases"
 
 
 [tool.hatch]
 version.source = "vcs"
-build.hooks.vcs.version-file = "stockify/src/stockify/_version.py"
+build.hooks.vcs.version-file = "PyStoAnalyzer/src/PyStoAnalyzer/_version.py"
 envs.default.dependencies = [
   "pytest",
   "pytest-cov",
@@ -78,7 +79,7 @@ testpaths = [
 
 
 [tool.coverage]
-run.source = ["stockify"]
+run.source = ["PyStoAnalyzer"]
 port.exclude_lines = [
   'pragma: no cover',
   '\.\.\.',
@@ -97,7 +98,7 @@ disallow_untyped_defs = false
 disallow_incomplete_defs = false
 
 [[tool.mypy.overrides]]
-module = "stockify.*"
+module = "PyStoAnalyzer.*"
 disallow_untyped_defs = true
 disallow_incomplete_defs = true
 
@@ -141,7 +142,7 @@ exclude = []
 flake8-unused-arguments.ignore-variadic-names = true
 isort.required-imports = ["from __future__ import annotations"]
 # Uncomment if using a _compat.typing backport
-# typing-modules = ["stockify._compat.typing"]
+# typing-modules = ["PyStoAnalyzer._compat.typing"]
 
 [tool.ruff.per-file-ignores]
 "tests/**" = ["T20"]
