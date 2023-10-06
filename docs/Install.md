@@ -19,7 +19,22 @@ python -m venv tester_env
 ```
 python -m pip install PyStoAnalyzer
 ```
+### Setting-up Project 
+To use the software properly setup these *API keys* to completely use the features of the 
+project:
 
+1. `Newsapi` access from [this](https://newsapi.org/).
+2. `Polygon.io` API access from [this](https://polygon.io/).
+
+#### Setup API Globally
+```
+#Polyon API KEY
+export api_key="YOUR-API-KEY"
+
+#NewsApi KEY
+export news_api="YOUR-API-KEY"
+
+```
 ## Build PyStoAnalyzer from source
 
 If you want to develop `PyStoAnalyzer`, or use its latest commit (!can be unstable!),

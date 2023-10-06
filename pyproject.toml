@@ -39,6 +39,14 @@ test = [
 dev = [
   "pytest >=6",
   "pytest-cov >=3",
+  "polygon-api-client",
+  "statsmodels",
+  "pmdarima",
+  "urllib3",
+  "typing",
+  "transformers",
+  "matplotlib",
+  "pandas",
 ]
 docs = [
   "sphinx>=7.0",
@@ -46,7 +54,7 @@ docs = [
   "sphinx_copybutton",
   "sphinx_autodoc_typehints",
   "furo>=2023.08.17",
-  "mkdocs-material"
+  "mkdocs-material",
 ]
 
 [project.urls]

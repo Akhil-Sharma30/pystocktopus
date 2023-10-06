@@ -1,17 +1,20 @@
-# stockify
+--8<-- "README.md"
+<!-- #### With line numbers
 
-```{toctree}
-:maxdepth: 2
-:hidden:
-
+``` py linenums="1"
+def bubble_sort(items):
+    for i in range(len(items)):
+        for j in range(len(items) - 1 - i):
+            if items[j] > items[j + 1]:
+                items[j], items[j + 1] = items[j + 1], items[j]
 ```
 
-```{include} ../README.md
-:start-after: <!-- SPHINX-START -->
-```
+#### Highlighting lines
 
-## Indices and tables
-
-- {ref}`genindex`
-- {ref}`modindex`
-- {ref}`search`
+``` py hl_lines="2 3"
+def bubble_sort(items):
+    for i in range(len(items)):
+        for j in range(len(items) - 1 - i):
+            if items[j] > items[j + 1]:
+                items[j], items[j + 1] = items[j + 1], items[j]
+``` -->
