@@ -36,15 +36,16 @@ class News:
         results_dict = {}
 
         # Define date range
-        start_date = datetime(predict_date)
+        start_date = datetime.strptime(predict_date, '%Y-%m-%d')
         end_date = PastDays._CalculateDate(start_date,days_lag)
 
         # Iterate through the ticker values and fetch articles for each
         for ticker in ticker_values:
             all_articles = newsapi.get_everything(
                 q=ticker,
-                from_param=start_date.strftime('%Y-%m-%d'),
-                to=end_date.strftime('%Y-%m-%d'),
+                sources='bbc-news,the-verge',
+                from_param=start_date,
+                to=end_date,
                 language='en',
                 sort_by='relevancy'
             )
