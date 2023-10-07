@@ -27,15 +27,7 @@ cd PyStoAnalyzer
 
 ### Creating a virtual environment
 
-A virtual environment can be set up and activated using `venv` in both `UNIX`
-and `Windows` systems.
-
-**UNIX**:
-
-```bash
-python3 -m venv .tester_dev
-. .env/bin/activate
-```
+A virtual environment can be set up and activated using `venv` in and `Windows` systems.
 
 **Windows**:
 
@@ -47,7 +39,6 @@ python -m venv .tester_dev
 ### Installing dependencies
 
 ### Installing PyStoAnalyzer
-
 `PyStoAnalyzer` uses modern `Python` packaging and can be installed using `pip` -
 
 ```bash
@@ -74,16 +65,7 @@ dependencies included above, use -
 pip install -e .[dev,test,docs]
 ```
 
-### Adding PyStoAnalyzer for notebooks
-
-`PyStoAnalyzer` can be added to the notebooks using the following commands -
-
-```bash
-python -m ipykernel install --user --name PyStoAnalyzer
-```
-
 ## Activating pre-commit
-
 `PyStoAnalyzer` uses a set of `pre-commit` hooks and the `pre-commit` bot to format,
 type-check, and prettify the codebase. The hooks can be installed locally
 using -
@@ -102,6 +84,26 @@ pre-commit run --all-files
 
 If you would like to skip the failing checks and push the code for further
 discussion, use the `--no-verify` option with `git commit`.
+
+## Submitting Code
+The following is a *short* list of recommendations. PRs that don't match these criteria won't be closed but it'll be harder to merge the changes into the code.
+
+* **Do** stick to [PEP8](https://www.python.org/dev/peps/pep-0008/).
+* **Do** specify a descriptive title to make searching for your pull request easier.
+* **Don't** leave your pull request description blank.
+* **Do** license your code as GPLv3.
+
+Also, please submit PRs to the `develop` branch.
+
+#### Unit Tests
+**Do** add unit tests if you think it fits. We place our unit tests in the same folder as the code, with the same 
+filename, followed by the _test suffix. So for example: `somefile.py` will be tested by `somefile_test.py`.
+
+Please try to read some of the existing unit testing code, so you can see some examples.
+
+#### Branches Naming Scheme
+**Do** name your branches in accordance with GitFlow. The format is `ISSUE_#/BRANCH_NAME`; For example, 
+`100/fix-for-pattern` or `232/Documentation/add-new-feature`.
 
 ## Testing PyStoAnalyzer
 
