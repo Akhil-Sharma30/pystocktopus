@@ -95,7 +95,7 @@ plt.style.use(style="seaborn")
 #         return model,forecast,Low_predictions,High_predictions
 
 class DataAnalysis:
-    #Create a comparsion graph for the data 
+    """Class for performing data analysis on stock data."""
     @staticmethod
     def prediction_analysis(
                         test_data,
@@ -103,6 +103,15 @@ class DataAnalysis:
                         forecast: list,
                         lower_predictions: list,
                         high_predictions: list)-> None:
+            """Creates a comparison graph for the predicted and actual stock data.
+
+            Args:
+                test_data (pd.Series): The actual stock data.
+                steps (str): The number of periods to forecast.
+                forecast (pd.Series): The predicted stock data.
+                lower_predictions (pd.Series): The lower bound of the prediction interval.
+                high_predictions (pd.Series): The upper bound of the prediction interval.
+            """
 
             plt.figure(figsize=(16,8))
             plt.plot(test_data[:int(steps)], label="actual")

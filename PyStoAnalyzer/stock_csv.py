@@ -9,12 +9,21 @@ import pandas as pd
 import os
 
 class CSVDataHandler:
-
-    #Store the data in the csv in List
+    """Class for handling CSV data."""
+    
     @staticmethod
     def csv_data_reader(
                     csv_file, 
                     csv_stock_column_name: str) -> List[str]:
+        """Reads the data from the specified column in a CSV file.
+
+        Args:
+            csv_file (str): The path to the CSV file.
+            csv_stock_column_name (str): The name of the column to read.
+
+        Returns:
+            List[str]: A list of the values in the specified column.
+        """
         data_values: List[str] = []
         
         try:
@@ -53,6 +62,14 @@ class CSVDataHandler:
 
     @staticmethod
     def _getValue(closing_price: Dict[float,float]):
+        """Extracts the last value from each key in a dictionary.
+
+        Args:
+            closing_price (Dict[float, float]): A dictionary of closing prices.
+
+        Returns:
+            List[float]: A list of the last values in the dictionary.
+        """
         # Initialize a list to store the last values
         last_values = []
 
@@ -82,6 +99,15 @@ class CSVDataHandler:
                 csv_path: str, 
                 results: List[float],
                 new_column_name: str= 'Price Calculated') -> None:
+        """Combines the data of the bought shares ticker and closing price values.
+
+        Args:
+            data_values (List[float]): A list of the bought shares ticker values.
+            close_list (Dict[float, float]): A dictionary of closing prices.
+
+        Returns:
+            List[float]: A list of the combined values.
+        """
         try:
             # Read the CSV file into a pandas DataFrame
             df = pd.read_csv(csv_path)
@@ -104,6 +130,15 @@ class CSVDataHandler:
     def close_list_csv(
               ticker_data: Dict[str, List[float]],
               closing_data_fieldname: List[str] = ['closing_stock_data']) -> None:
+        """Stores the closing list stock results in a CSV file.
+
+        Args:
+            ticker_data (Dict[str, List[float]]): A dictionary of ticker symbols and closing prices.
+            closing_data_fieldname (List[str]): A list of the names of the columns to create in the CSV file.
+
+        Raises:
+            ValueError: If the ticker_data dictionary is empty.
+        """
         
         if not ticker_data:
             return  # Return early if ticker_data is empty

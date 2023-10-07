@@ -12,9 +12,17 @@ from PyStoAnalyzer.core import PastDays
 import pandas as pd
 
 class News:
-    
+    """Class for handling news data."""
     @staticmethod
     def _combine_news_article(all_articles):
+        """Combines the news articles for each ticker into a single string.
+
+        Args:
+            all_articles (Dict[str, Dict]): A dictionary of news articles for each ticker.
+
+        Returns:
+            Dict[str, str]: A dictionary of combined news articles for each ticker.
+        """
         result_strings = {}
 
         # Iterate through the ticker values and their corresponding articles
@@ -29,6 +37,17 @@ class News:
         return result_strings
 
     def new_data_extract(ticker_values,predict_date,days_lag: int=2):
+        """Extracts news articles for a given list of tickers and date range.
+
+        Args:
+            ticker_values (List[str]): A list of ticker values to extract news articles for.
+            predict_date (str): The date to predict news articles for.
+            days_lag (int): The number of days before the predict_date to extract news articles for.
+
+        Returns:
+            Dict[str, str]: A dictionary of news articles for each ticker.
+        """
+
         # Initialize the News API client (you may need to install the newsapi-python package)
         newsapi = NewsApiClient(api_key=news_api)
 
@@ -59,6 +78,15 @@ class News:
     
     @staticmethod
     def news_predict_analysis(Data: Dict[str,str]) -> Dict[str,str]:
+        """Predicts the sentiment of the news articles for each ticker.
+
+        Args:
+            Data (Dict[str, str]): A dictionary of news articles for each ticker.
+
+        Returns:
+            Dict[str, str]: A dictionary of predicted sentiment for each ticker.
+        """
+
         # Initialize the text classification pipeline
         pipe = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
 
@@ -79,6 +107,16 @@ class News:
     
     @staticmethod
     def create_csv_with_predictions(csv_filename: str, analysis_results, column_name_for_prediction="news_prediction_for_stock"):
+        """Creates a CSV file with the predicted sentiment for each ticker.
+
+        Args:
+            csv_filename (str): The path to the CSV file to create.
+            analysis_results (Dict[str, Dict]): A dictionary of predicted sentiment results for each ticker.
+            column_name_for_prediction (str): The name of the column in the CSV file to store the predicted sentiment.
+
+        Raises:
+            Exception: If an error occurs while creating the CSV file.
+        """
         try:
             # Create a new DataFrame with the "Ticker" and "column_name_for_prediction" columns
             data = []

@@ -13,12 +13,26 @@ import pandas as pd
 import datetime
 
 class StockExtractor:
-
+    """Extracts stock data from Polygon.io.
+    """
     def ticker_data_collection(
                             ticker_values:List[str],
                             timespan: str,
                             multiplier: int,
                             user_date: str) -> List[float]:
+            """Extracts stock data closing price from Polygon.io.
+
+            Args:
+                ticker_values (List[str]): A list of stock ticker symbols.
+                timespan (str): The time span of the data to collect. Valid values are "day",
+                    "week", "month", and "quarter".
+                multiplier (int): The multiplier to apply to the time span. For example, a multiplier
+                    of 2 will collect data for twice the specified time span.
+                user_date (str): The date up to which to collect data.
+
+            Returns:
+                List[float]: A list of closing prices for the specified stocks.
+            """
 
             start_date = PastDays._CalculateDate(user_date,10)
 
@@ -62,6 +76,15 @@ class PastDays:
      
      @staticmethod
      def _CalculateDate(start_date_str,days_lag):
+        """Calculates the start date for the data collection.
+
+    Args:
+        start_date_str (str): The end date for the data collection.
+        days_lag (int): The number of days to subtract from the end date to get the start date.
+
+    Returns:
+        str: The start date for the data collection in the format "YYYY-MM-DD".
+    """
         try:
             # Convert the start_date string to a datetime object
             end_date = datetime.datetime.strptime(start_date_str, '%Y-%m-%d')

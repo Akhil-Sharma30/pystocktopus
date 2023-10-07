@@ -20,6 +20,12 @@ import PyStoAnalyzer.config as config
 class DisplayPattern:
     #A function that loads pattern data
     def load_patterns() -> list:
+        """A function that loads pattern data.
+
+        Patterns are store in /data/patterns directories, in json format.
+
+        :return: List of Pattern objects
+        """
         patterns = []
         pattern_directory = '../PyStoAnalyzer/Data/Pattern' 
         for filename in os.listdir(pattern_directory):
@@ -68,8 +74,16 @@ class DisplayPattern:
 
         return patterns
 
-#Object that stores trendline criteria for support and resistance lines
 class TrendLineCriteria:
+    """
+    Object that stores trendline criteria for support and resistance lines.
+
+    Args:
+        tlc_id (int): The ID of the trendline criteria.
+        tlc_type (str): The type of the trendline criteria (either "support" or "resistance").
+        slope_min (float): The minimum slope of the trendline.
+        slope_max (float): The maximum slope of the trendline.
+    """
     def __init__(self,
                  tlc_id: int,
                  tlc_type: str,
@@ -80,8 +94,16 @@ class TrendLineCriteria:
         self.slope_min = slope_min
         self.slope_max = slope_max
 
-#Object that stores intercept criteria for support and resistance lines
 class InterceptCriteria:
+    """
+    Object that stores intercept criteria for support and resistance lines.
+
+    Args:
+        int_id (int): The ID of the intercept criteria.
+        sup_id (int): The ID of the support trendline criteria.
+        res_id (int): The ID of the resistance trendline criteria.
+        periods_till_intercept (int): The number of periods until the intercept.
+    """
     def __init__(self,
                  int_id: int,
                  sup_id: int,
@@ -94,6 +116,15 @@ class InterceptCriteria:
 
 #Object to store chart pattern
 class Pattern:
+    """
+    Object to store chart pattern.
+
+    Args:
+        pattern_name (str): The name of the pattern.
+        sups (list[TrendLineCriteria]): A list of TrendLineCriteria objects for the support trendlines.
+        ress (list[TrendLineCriteria]): A list of TrendLineCriteria objects for the resistance trendlines.
+        intercepts (list[InterceptCriteria]): A list of InterceptCriteria objects for the intercepts.
+    """
     def __init__(self, pattern_name: str,
                  sups: [TrendLineCriteria],
                  ress: [TrendLineCriteria],
@@ -109,8 +140,17 @@ class Pattern:
                f"ress: {len(self.ress)}, " \
                f"intercepts: {len(self.intercepts)}"
 
-#Object that defines a trendline on a chart
 class TrendLine:
+    """
+    Object that defines a trendline on a chart.
+
+    Args:
+        b (float): The y-intercept of the trendline.
+        m (float): The slope of the trendline.
+        touches (list[int]): A list of the indices of the points on the trendline.
+        first_day (int): The index of the first day on the trendline.
+    """
+
     def __init__(self, b, m, touches, first_day):
         self.b = b
         self.m = m
@@ -122,6 +162,11 @@ class TrendLine:
 
     #A function to calculate the intercept point between two trendlines.
     def intercept_point(self, other_line) -> (float, float):
+        """A function to calculate the intercept point between two trendlines.
+
+        :param other_line: A trendline
+        :return: A tuple in the form (x, y). None if other_trendline is None.
+        """
         if other_line is None:
             return None
 
@@ -130,11 +175,23 @@ class TrendLine:
 
         return intercept_x, intercept_y
 
-#Object that holds all information needed to draw a chart
 class Chart:
+    """Object that holds all information needed to draw a chart"""
     def __init__(self, symbol: str, prices: list, support: TrendLine,
                  resistance: TrendLine, support_points: list, resistance_points: list,
                  patterns: [Pattern]):
+        """
+    Initializes a new Chart object.
+
+    Args:
+        symbol (str): The symbol of the stock being charted.
+        prices (list): A list of the stock's prices.
+        support (TrendLine): A TrendLine object representing the support line.
+        resistance (TrendLine): A TrendLine object representing the resistance line.
+        support_points (list): A list of the indices of the support points.
+        resistance_points (list): A list of the indices of the resistance points.
+        patterns (list[Pattern]): A list of Pattern objects representing the patterns to detect.
+    """
 
         self.symbol = symbol
         self.prices = prices
@@ -153,6 +210,12 @@ class Chart:
                f", {self.patterns})"
 
     def detect_pattern(self):
+        """
+        Detects the patterns in the chart.
+
+        Sets the `detected_patterns` attribute to a list of trade criteria for the detected patterns.
+        """
+         
         for pattern in self.patterns:
             pattern_found = True
 
@@ -225,6 +288,12 @@ class Chart:
 
 #A function that draws the data on a matplotlib chart
 def draw_chart(chart_data: Chart) -> None:
+    """
+    Draws a chart of the given chart data.
+
+    Args:
+        chart_data (Chart): The chart data to draw.
+    """
     ax1 = plt.subplot2grid((1, 1), (0, 0))
     candlestick_ohlc(ax1, chart_data.prices.values, width=0.0001, colorup='g',
                      colordown='r')
