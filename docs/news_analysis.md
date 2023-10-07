@@ -1,0 +1,1 @@
+::: PyStoAnalyzer.news_analysis

@@ -1,8 +1,5 @@
-"""
-Copyright (c) 2023 Akhil Sharma. All rights reserved.
+#Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
-PyStoAnalyzer.
-"""
 from PyStoAnalyzer.config import news_api
 from typing import List,Dict
 from datetime import datetime, timedelta
@@ -56,7 +53,7 @@ class News:
 
         # Define date range
         start_date = datetime.strptime(predict_date, '%Y-%m-%d')
-        end_date = PastDays._CalculateDate(start_date,days_lag)
+        end_date = PastDays.CalculateDate(start_date,days_lag)
 
         # Iterate through the ticker values and fetch articles for each
         for ticker in ticker_values:

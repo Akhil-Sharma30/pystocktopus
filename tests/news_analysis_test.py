@@ -1,5 +1,5 @@
 import pytest
-import PyStoAnalyzer.new_analysis as news
+import PyStoAnalyzer.news_analysis as news
 
 # Define your ticker values
 ticker_values = ['SONY', 'NIKE']

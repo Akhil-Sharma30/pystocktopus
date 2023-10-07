@@ -13,6 +13,6 @@ __all__ = ("__version__",)
 
 import PyStoAnalyzer.config
 from PyStoAnalyzer.stock_csv import CSVDataHandler
-from PyStoAnalyzer.new_analysis import News
+from PyStoAnalyzer.news_analysis import News
 import PyStoAnalyzer.core
 import PyStoAnalyzer.pattern_tool

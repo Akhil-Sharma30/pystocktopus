@@ -33,7 +33,7 @@ Introducing **PyStoAnalyzer**, a powerful Python package for **Python 3.7+** des
 
 **PyStoAnalyzer** is an easy-to-use and versatile library that empowers users to maintain and analyze their stock data with ease. Whether you are an experienced trader or a novice investor, PyStoAnalyzer provides a comprehensive set of tools to streamline your stock-related tasks.
 
-## Key Features:
+## Key Features
 
 * CSV Data Maintenance:
 
@@ -47,7 +47,7 @@ Stay ahead of the curve with real-time stock analysis. PyStoAnalyzer offers tool
 
 PyStoAnalyzer simplifies the process of extracting the current closing price for a specific stock. With just a few lines of code, you can access up-to-the-minute price information, enabling you to monitor your investments with precision.
 
-# Here are some examples of how the package can be used:
+## Here are some examples of how the package can be used:
 
 ## Upgrade your CSV dashboard with new data:
 ```.py
@@ -132,7 +132,7 @@ most_negative_news = news_data[sentiments == "Negative"].sort_values("score", as
 
 # Display the most positive and negative news articles:
 ```.py
-import PyStoAnalyzer.new_analysis as news
+import PyStoAnalyzer.news_analysis as news
 
 result_strings = {
     "Ticker1": "Day1: i am excellent\nDay2: i am good\n",
@@ -185,5 +185,5 @@ export news_api="YOUR-API-KEY"
 
 ## Contributing
 
-If you want to contribute to `riemapp` (thanks!), please have a look at our
-[Contributing Guide](https://github.com/Saransh-cpp/riemapp/blob/main/CONTRIBUTING.md).
+If you want to contribute to `PyStoAnalyzer` (thanks!), please have a look at our
+[Contributing Guide](https://github.com/Akhil-Sharma30/PyStoAnalyzer/blob/main/CONTRIBUTING.md).

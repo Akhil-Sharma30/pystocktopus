@@ -1,8 +1,5 @@
-"""
-Copyright (c) 2023 Akhil Sharma. All rights reserved.
+#Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
-PyStoAnalyzer.
-"""
 import csv
 from typing import List,Dict
 import pandas as pd

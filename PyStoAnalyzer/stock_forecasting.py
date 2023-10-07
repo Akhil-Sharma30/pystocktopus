@@ -1,8 +1,5 @@
-"""
-Copyright (c) 2023 Akhil Sharma. All rights reserved.
+#Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
-PyStoAnalyzer.
-"""
 import pandas as pd
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller 

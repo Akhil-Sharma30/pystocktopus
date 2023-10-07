@@ -23,6 +23,10 @@ theme:
     repo: fontawesome/brands/github
   # custom_dir: "docs/_overrides/"
 
+plugins: 
+  - mkdocstrings
+
+
 site_description: Documentation for PyStoAnalyzer
 site_author: Akhil Sharma
 site_url: 
@@ -60,10 +64,16 @@ markdown_extensions:
 nav:
   - Home: "index.md"
   - Installation: "Install.md"
-  - Implementation guide: "guide.md"
-  - Contributing: "Contribution.md"
-  - Changelog: "ChangeLog.md"
-  - Code of Conduct: "Conduct.md"
+  - Implementation guide: 
+    - core.py: "core.md" 
+    - stock_csv.py: "stock_csv.md"
+    - news_analysis.py: "news_analysis.md"
+    - pattern_tool.py: "pattern_tool.md"
+    - stock_forecasting.py: "stock_forecasting.md"
+  - Your support:
+    - Contributing: "Contribution.md"
+    - Changelog: "ChangeLog.md"
+    - Code of Conduct: "Conduct.md"
 
 copyright: |
   &copy; 2023 <a href="https://github.com/Akhil-Sharma30"  target="_blank" rel="noopener">Akhil Sharma</a>

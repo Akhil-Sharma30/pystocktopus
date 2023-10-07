@@ -1,8 +1,5 @@
-"""
-Copyright (c) 2023 Akhil Sharma. All rights reserved.
+#Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
-PyStoAnalyzer.
-"""
 from polygon import RESTClient
 import PyStoAnalyzer.config as config
 from typing import cast,List,TypeVar,Tuple,Any
@@ -34,7 +31,7 @@ class StockExtractor:
                 List[float]: A list of closing prices for the specified stocks.
             """
 
-            start_date = PastDays._CalculateDate(user_date,10)
+            start_date = PastDays.CalculateDate(user_date,10)
 
             # Initialize the dictionary to store data
             ticker_data = {}
@@ -75,7 +72,7 @@ class StockExtractor:
 class PastDays:
      
      @staticmethod
-     def _CalculateDate(start_date_str,days_lag):
+     def CalculateDate(start_date_str: str,days_lag: int):
         """Calculates the start date for the data collection.
 
     Args:

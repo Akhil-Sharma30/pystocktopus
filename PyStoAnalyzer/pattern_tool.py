@@ -1,8 +1,5 @@
-"""
-Copyright (c) 2023 Akhil Sharma. All rights reserved.
+#Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
-PyStoAnalyzer.
-"""
 import datetime
 import os
 import sys

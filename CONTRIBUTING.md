@@ -74,7 +74,7 @@ dependencies included above, use -
 pip install -e .[dev,test,docs]
 ```
 
-### Adding riemapp for notebooks
+### Adding PyStoAnalyzer for notebooks
 
 `PyStoAnalyzer` can be added to the notebooks using the following commands -
 
@@ -103,14 +103,14 @@ pre-commit run --all-files
 If you would like to skip the failing checks and push the code for further
 discussion, use the `--no-verify` option with `git commit`.
 
-## Testing riemapp
+## Testing PyStoAnalyzer
 
 `PyStoAnalyzer` is tested with `pytest` and `xdoctest`. `pytest` is responsible for
 testing the code, whose configuration is available in
-[pyproject.toml](https://github.com/Saransh-cpp/riemapp/blob/main/pyproject.toml),
+[pyproject.toml](https://github.com/Akhil-Sharma30/PyStoAnalyzer/blob/main/pyproject.toml),
 and on the other hand, `xdoctest` is responsible for testing the examples
 available in every docstring, which prevents them from going stale.
-Additionally, `riemapp` also uses `pytest-cov` to calculate the coverage of
+Additionally, `PyStoAnalyzer` also uses `pytest-cov` to calculate the coverage of
 these unit tests.
 
 ### Running tests locally
@@ -141,14 +141,14 @@ A much more detailed guide on testing with `pytest` is available
 [Markdown](https://en.wikipedia.org/wiki/Markdown). The docstrings include the
 description, arguments, examples, return values, and attributes of a class or a
 function, and the `.md` files enable us to render this documentation on
-`riemapp`'s documentation website.
+`PyStoAnalyzer`'s documentation website.
 
 `PyStoAnalyzer` primarily uses [MkDocs](https://www.mkdocs.org/) and
 [mkdocstrings](https://mkdocstrings.github.io/) for rendering documentation on
 its website. The configuration file (`mkdocs.yml`) for `MkDocs` can be found
 [here](https://github.com/Akhil-Sharma30/PyStoAnalyzer/blob/main/mkdocs.yml). The
 documentation is deployed on <https://readthedocs.io>
-[here](https://riemapp.readthedocs.io/en/latest/).
+[here](https://PyStoAnalyzer.readthedocs.io/en/latest/).
 
 Ideally, with the addition of every new feature to `PyStoAnalyzer`, documentation
 should be added using comments, docstrings, and `.md` files.
