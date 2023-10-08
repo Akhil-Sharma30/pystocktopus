@@ -31,7 +31,7 @@ class StockExtractor:
                 List[float]: A list of closing prices for the specified stocks.
             """
 
-            start_date = PastDays.CalculateDate(user_date,10)
+            start_date = PastDays.CalculateDate(user_date,90)
 
             # Initialize the dictionary to store data
             ticker_data = {}
