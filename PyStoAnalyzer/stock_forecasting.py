@@ -70,7 +70,8 @@ class ModelStockData:
 
     def create_and_fit_lstm_model(csv_file:str,
                                   sequence_length:int=10,
-                                  layers:int=50,lstm_units:list = [16],
+                                  layers:int=50,
+                                  lstm_units:list = [16],
                                   epochs = 50, lr:float = 0.0008, 
                                   stacked:bool = False,
                                   stock_closing_price_column_name:str='closing_stock_data_SONY'):
