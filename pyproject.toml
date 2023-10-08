@@ -29,7 +29,18 @@ classifiers = [
   "Typing :: Typed",
 ]
 dynamic = ["version"]
-dependencies = []
+dependencies = [
+  "polygon-api-client",
+  "sklearn",
+  "pmdarima",
+  "urllib3",
+  "typing",
+  "transformers",
+  "matplotlib",
+  "pandas",
+  "plotly",
+  "mplfinance",
+]
 
 [project.optional-dependencies]
 test = [
@@ -39,14 +50,6 @@ test = [
 dev = [
   "pytest >=6",
   "pytest-cov >=3",
-  "polygon-api-client",
-  "statsmodels",
-  "pmdarima",
-  "urllib3",
-  "typing",
-  "transformers",
-  "matplotlib",
-  "pandas",
 ]
 docs = [
   "sphinx>=7.0",

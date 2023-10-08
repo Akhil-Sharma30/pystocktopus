@@ -36,8 +36,6 @@ python -m venv .tester_dev
 .env\bin\activate
 ```
 
-### Installing dependencies
-
 ### Installing PyStoAnalyzer
 `PyStoAnalyzer` uses modern `Python` packaging and can be installed using `pip` -
 

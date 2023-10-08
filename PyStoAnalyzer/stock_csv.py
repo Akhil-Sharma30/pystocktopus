@@ -145,7 +145,8 @@ class CSVDataHandler:
 
         try:
             with open(csv_file_name, 'w', newline='') as csvfile:
-                fieldnames = ['Date'] + list(ticker_data.keys())  # Add a 'Date' column
+                # Update fieldnames to include "Date" and columns for each ticker with custom field names
+                fieldnames = ['Date'] + [f"{field}_{ticker}" for ticker in ticker_data.keys() for field in closing_data_fieldname]
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
                 writer.writeheader()  # Write the header row
@@ -155,12 +156,14 @@ class CSVDataHandler:
                 for i in range(num_rows):
                     data_row = {'Date': f'Date_{i + 1}'}  # Add a date identifier
                     for ticker, close_list in ticker_data.items():
-                        data_row[ticker] = close_list[i]
+                        for field in closing_data_fieldname:
+                            data_row[f"{field}_{ticker}"] = close_list[i]
                     writer.writerow(data_row)
 
-            # Print success message with file name and path
-            file_path = os.path.abspath(csv_file_name)
-            print(f"CSV file '{csv_file_name}' created successfully at '{file_path}'")
+                # Print success message with file name and path
+                file_path = os.path.abspath(csv_file_name)
+                print(f"CSV file '{csv_file_name}' created successfully at '{file_path}'")
 
         except Exception as e:
             print(f"An error occurred: {str(e)}")
+
