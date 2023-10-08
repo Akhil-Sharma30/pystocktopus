@@ -7,6 +7,7 @@ from newsapi import NewsApiClient
 from transformers import pipeline
 from PyStoAnalyzer.core import PastDays
 import pandas as pd
+import plotly.graph_objects as go
 
 class News:
     """Class for handling news data."""
