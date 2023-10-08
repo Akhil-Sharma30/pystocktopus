@@ -1,118 +1,184 @@
 #Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
+import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from statsmodels.tsa.stattools import adfuller 
-from statsmodels.tsa.arima_model import ARIMA
-from pmdarima.arima.utils import ndiffs
+import tensorflow as tf
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
 from typing import cast,List,TypeVar,Tuple,Any
-plt.style.use(style="seaborn")
+import pandas as pd
+import mplfinance as fplt
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 
-# class ModelStockData:
+class ModelStockData:
+    def _csvDataCollection(csv_file: str,sequence_length,stock_closing_price_column_name: str):
+        """Collects and prepares data from a CSV file for training a sequential model.
 
-#     # User defined input for the train test data split
-#     user_train_data = input()
-#     user_test_data = input()
+        Args:
+            csv_file (str): The path to the CSV file containing the data.
+            sequence_length (int): The length of the sequences to create from the data.
+            stock_closing_price_column_name (str): The name of the column in the CSV file containing
+                the stock closing price data.
 
-#     def preprocessing(col_name_for_closing_stock: str,csv_file=None):
-#         df = pd.read_csv(stock.csv_path)
+        Returns:
+            tuple[tf.Tensor, tf.Tensor, tf.Tensor, tf.Tensor]: A tuple of four TensorFlow tensors,
+                representing the training input sequences (X), training target values (y), test input
+                sequences (X_test), and test target values (y_test).
+        """
+        df = pd.read_csv(csv_file)
+        data = df[stock_closing_price_column_name].values.reshape(-1, 1)
 
-#         if col_name_for_closing_stock is not None:
-#             df_close_values = df[col_name_for_closing_stock].copy
-#         else:
-#             df_close_values = df['closing_stock_data'].copy
+        # Scale the data to be between 0 and 1
+        scaler = MinMaxScaler()
+        data = scaler.fit_transform(data)
 
-#         #Check if the data is stationary or not
-#         stationary_check = adfuller(df_close_values.dropna())
-#         #Storing the p-value 
-#         if(stationary_check[1]<0.05):
-#             p_value = stationary_check[1]
-#         else:
-#             p_value = ndiffs(df_close_values, test='adf')
+        # Split the data into training and testing sets
+        train_size = int(len(data) * 0.8)   
+        train_data = data[:train_size]
+        test_data = data[train_size:]
 
-#         #Splitting the model into train and test data
-#         number_of_testcases= int(len(df_close_values)*0.8)
-#         train_data = df_close_values[:number_of_testcases]
-#         test_data = df_close_values[number_of_testcases:] 
+        # Create sequences of data for training
+        def create_sequences(data, seq_length):
+            sequences = []
+            for i in range(len(data) - seq_length):
+                X = data[i:i+seq_length]
+                y = data[i+seq_length]
+                sequences.append((X, y))
+            return np.array(sequences)
 
-#         return p_value,train_data,test_data
-    
-#     #p_value-> is the number of autoregressive terms, 
-#     # diff-> is the number of nonseasonal differences needed for stationarity, and. 
-#     # lagg-> is the number of lagged forecast errors in the prediction equation.
+        seq_length = sequence_length
+        train_sequences = create_sequences(train_data, seq_length)
+        test_sequences = create_sequences(test_data, seq_length)
 
-#     def stock_arima(p_value: int,diff: int,lagg: int,csv_path: Any,user_train_data=None,user_test_data=None)-> Any:
+        # Separate input sequences (X) and target values (y)
+        X_train = np.stack(train_sequences[:, 0])  # Stack input sequences
+        y_train = np.stack(train_sequences[:, 1])  # Stack target sequences
 
-#         if user_train_data is not None:
-#             #Fitting the ARIMA Model to dataset
-#             model = ARIMA(user_train_data,order=(p_value,diff,lagg))
-#             result_analysis = model.fit(disp=0)
+        X_test = np.stack(test_sequences[:, 0])  # Stack input sequences
+        y_test = np.stack(test_sequences[:, 1])  # Stack target sequences
 
-#             #Debugging the model 
-#             #print(result_analysis.summary)
+        # Convert NumPy arrays to TensorFlow tensors
+        X_tensorflow_train = tf.convert_to_tensor(X_train, dtype=tf.float32)
+        y_tensorflow_train = tf.convert_to_tensor(y_train, dtype=tf.float32)
+        X_tensorflow_test = tf.convert_to_tensor(X_test, dtype=tf.float32)
+        y_tensorflow_test = tf.convert_to_tensor(y_test, dtype=tf.float32)
 
-#             #Actual vs fitting analysis
-#             # result_analysis.plot_predict(
-#             #     start=1,
-#             #     end=60,
-#             #     dynamic=False,
-#             # );
+        return X_tensorflow_train,y_tensorflow_train,X_test
 
-#             #Calculating the steps of the future
-#             steps: str = input("Number of days in future to predict: ")
+    def create_and_fit_lstm_model(csv_file:str,
+                                  sequence_length:int=10,
+                                  layers:int=50,lstm_units:list = [16],
+                                  epochs = 50, lr:float = 0.0008, 
+                                  stacked:bool = False,
+                                  stock_closing_price_column_name:str='closing_stock_data_SONY'):
+        """Creates and fits a long short-term memory (LSTM) model to predict stock prices.
 
-#             fc,conf = result_analysis.forecast(int(steps))
-#             forecast = pd.Series(fc, index=user_test_data[:int(steps)].index)
-#             Low_predictions = pd.Series(conf[:,0], index=user_test_data[:int(steps)].index)
-#             High_predictions = pd.Series(conf[:,1], index=user_test_data[:int(steps)].index)
-        
-#         else:
-#             #Fitting the ARIMA Model to dataset
-#             model = ARIMA(train_data,order=(p_value,diff,lagg))
-#             result_analysis = model.fit(disp=0)
-#             model
-#             #Debugging the model 
-#             #print(result_analysis.summary)
+        Args:
+            csv_file (str): The path to the CSV file containing the stock price data.
+            sequence_length (int): The length of the sequences to create from the data.
+            layers (int): The number of LSTM layers in the model.
+            lstm_units (list): A list of the number of units in each LSTM layer.
+            epochs (int): The number of epochs to train the model for.
+            lr (float): The learning rate to use during training.
+            stacked (bool): Whether to use a stacked LSTM model or Single LSTM Layer.
+            stock_closing_price_column_name (str): The name of the column in the CSV file containing
+                the stock closing price data.
 
-#             #Actual vs fitting analysis
-#             # result_analysis.plot_predict(
-#             #     start=1,
-#             #     end=60,
-#             #     dynamic=False,
-#             # );
+        Returns:
+            float: The mean predicted stock price for the test set.
+        """
+        # setting the from the user csv file
+        X_tensorflow_train,y_tensorflow_train,X_test= ModelStockData._csvDataCollection(csv_file,sequence_length,stock_closing_price_column_name)
 
-#             #Calculating the steps of the future
-#             steps: str = input("Number of days in future to predict: ")
+        input_shape = (X_tensorflow_train.shape[1], X_tensorflow_train.shape[2])
+        if stacked is False:
+            model = Sequential()
+            model.add(LSTM(layers, activation='relu', input_shape=input_shape))
+            model.add(Dense(1))
+        else:
+            model = Sequential() 
+            model.add(LSTM(1, activation='relu', input_shape=input_shape))
+            model.add(Dense(1))
 
-#             fc,conf = result_analysis.forecast(int(steps))
-#             forecast = pd.Series(fc, index=test_data[:int(steps)].index)
-#             Low_predictions = pd.Series(conf[:,0], index=test_data[:int(steps)].index)
-#             High_predictions = pd.Series(conf[:,1], index=test_data[:int(steps)].index)
 
-#         return model,forecast,Low_predictions,High_predictions
+        model.compile(optimizer='adam', loss='mean_squared_error')
+        model.fit(X_tensorflow_train, y_tensorflow_train, epochs)
+        predicted_prices = model.predict(X_test)
+
+        # Inverse transform the scaled data to get the actual stock prices
+        predicted_prices = scaler.inverse_transform(predicted_prices)
+        value = np.mean(predicted_prices)
+        print(value)
 
 class DataAnalysis:
     """Class for performing data analysis on stock data."""
     @staticmethod
-    def prediction_analysis(
-                        test_data,
-                        steps: str,
-                        forecast: list,
-                        lower_predictions: list,
-                        high_predictions: list)-> None:
-            """Creates a comparison graph for the predicted and actual stock data.
+    def stock_analysis(
+                        csv_file:str,
+                        stock_closing_price_column_name:str='closing_stock_data_SONY')-> None:
+        """Performs a basic analysis of a stock price dataset.
 
-            Args:
-                test_data (pd.Series): The actual stock data.
-                steps (str): The number of periods to forecast.
-                forecast (pd.Series): The predicted stock data.
-                lower_predictions (pd.Series): The lower bound of the prediction interval.
-                high_predictions (pd.Series): The upper bound of the prediction interval.
-            """
+        Args:
+            csv_file (str): The path to the CSV file containing the stock price data.
+            stock_closing_price_column_name (str): The name of the column in the CSV file containing
+                the stock closing price data.
 
-            plt.figure(figsize=(16,8))
-            plt.plot(test_data[:int(steps)], label="actual")
-            plt.plot(forecast,label="forecast")
-            plt.fill_between(lower_predictions.index,lower_predictions,high_predictions,color="k",alpha=0.1)
-            plt.title("Forecast vs Actual data")
-            plt.legend(loc="upper left") 
+        Returns:
+            None
+        """
+        data = pd.read_csv(csv_file, index_col=0, parse_dates=True)
+        fplt.plot(data,type='candle',title='Google',ylabel='Price ($)')
+
+        fig = go.Figure(data=go.Scatter(x=data.index,y=data[stock_closing_price_column_name], mode='lines+markers'))
+        fig.show()
+
+    def interactive_sticks(csv_file:str,
+                           stock_closing_price_column_name:str='closing_stock_data_SONY'):
+        """Creates an interactive candlestick chart of a stock price dataset.
+
+        Args:
+            csv_file (str): The path to the CSV file containing the stock price data.
+            stock_closing_price_column_name (str): The name of the column in the CSV file containing
+                the stock closing price data.
+
+        Returns:
+            None
+        """
+        data = pd.read_csv(csv_file, index_col=0, parse_dates=True)
+        fig3 = make_subplots(specs=[[{"secondary_y": True}]])
+        fig3.add_trace(go.Candlestick(x=data.index,
+                              close=data[stock_closing_price_column_name],
+                             ))
+    
+    def interactive_bar(csv_file: str,
+                        stock_closing_price_column_name: str='closing_stock_data_SONY',
+                        volume_column_name: str='Volume',
+                        title_name: str = 'data'):
+        """Creates an interactive bar chart of a stock price dataset with volume and 20-day moving average.
+
+        Args:
+            csv_file (str): The path to the CSV file containing the stock price data.
+            stock_closing_price_column_name (str): The name of the column in the CSV file containing
+                the stock closing price data.
+            volume_column_name (str): The name of the column in the CSV file containing
+                the volume data.
+            title_name (str): The title of the chart.
+
+        Returns:
+            None
+        """
+        data = pd.read_csv(csv_file, index_col=0, parse_dates=True)
+        fig3 = make_subplots(specs=[[{"secondary_y": True}]])
+        fig3.add_trace(go.Bar(x=data.index, y=data[volume_column_name], name=volume_column_name),secondary_y=True)
+        fig3.update_layout(xaxis_rangeslider_visible=False)
+        fig3.show()
+        fig3.add_trace(go.Scatter(x=data.index,y=data[stock_closing_price_column_name].rolling(window=21).mean(),marker_color='blue',name='20 Day MA'))
+        fig3.add_trace(go.Bar(x=data.index, y=data[volume_column_name], name=volume_column_name),secondary_y=True)
+        fig3.update_layout(title={'text':title_name, 'x':0.5})
+        fig3.update_yaxes(range=[0,70000000],secondary_y=True)
+        fig3.update_yaxes(visible=False, secondary_y=True)
+        fig3.update_layout(xaxis_rangeslider_visible=False)  #hide range slider
+        fig3.show()
