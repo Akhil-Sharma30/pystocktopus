@@ -61,10 +61,10 @@ docs = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/Akhil-Sharma30/PyStoAnalyzer"
-"Bug Tracker" = "https://github.com/Akhil-Sharma30/PyStoAnalyzer/issues"
-Discussions = "https://github.com/Akhil-Sharma30/PyStoAnalyzer/discussions"
-Changelog = "https://github.com/Akhil-Sharma30/PyStoAnalyzer/releases"
+Homepage = "https://github.com/Akhil-Sharma30/pystocktopus"
+"Bug Tracker" = "https://github.com/Akhil-Sharma30/pystocktopus/issues"
+Discussions = "https://github.com/Akhil-Sharma30/pystocktopus/discussions"
+Changelog = "https://github.com/Akhil-Sharma30/pystocktopus/releases"
 
 
 [tool.hatch]

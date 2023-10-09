@@ -71,7 +71,7 @@ pytest
 Use pytest-cov to generate coverage reports:
 
 ```bash
-pytest --cov=PyStoAnalyzer
+pytest --cov=pystocktopus
 ```
 
 # Building docs

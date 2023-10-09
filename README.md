@@ -1,4 +1,13 @@
 # pystocktopus: Your Ultimate Stock Data Management and Analysis Toolkit
+![PyPI - Version](https://img.shields.io/pypi/v/pystocktopus)
+![Codecov](https://img.shields.io/codecov/c/github/Akhil-Sharma30/pystocktopus)
+![PyPI - License](https://img.shields.io/pypi/l/pystocktopus)
+![GitHub](https://img.shields.io/github/license/Akhil-Sharma30/pystocktopus)
+![GitHub Repo stars](https://img.shields.io/github/stars/Akhil-Sharma30/pystocktopus)
+![GitHub Discussions](https://img.shields.io/github/discussions/Akhil-Sharma30/pystocktopus)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pystocktopus)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Akhil-Sharma30/pystocktopus/CI)
+
 
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
