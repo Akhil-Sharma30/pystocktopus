@@ -1,8 +1,8 @@
 #Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
 from polygon import RESTClient
-import PyStoAnalyzer.config as config
-from typing import cast,List,TypeVar,Tuple,Any
+import pystocktopus.config as config
+from typing import cast
 from urllib3 import HTTPResponse
 import json
 import csv
@@ -13,10 +13,10 @@ class StockExtractor:
     """Extracts stock data from Polygon.io.
     """
     def ticker_data_collection(
-                            ticker_values:List[str],
+                            ticker_values:list[str],
                             timespan: str,
                             multiplier: int,
-                            user_date: str) -> List[float]:
+                            user_date: str) -> list[float]:
             """Extracts stock data closing price from Polygon.io.
 
             Args:
@@ -41,11 +41,11 @@ class StockExtractor:
                     # API Declarations
             client: str = RESTClient(api_key=config.api_key)
             # except:
-            #     print(f"'{config.api_key}' not found. Could you specify in the PyStoAnalyzer.config?") 
+            #     print(f"'{config.api_key}' not found. Could you specify in the pystocktopus.config?") 
             #     return
             
             for ticker in ticker_values:
-                aggs_csv: Tuple[int, str, str, str] = client.get_aggs(
+                aggs_csv: tuple[int, str, str, str] = client.get_aggs(
                     ticker,
                     int(multiplier),
                     timespan,

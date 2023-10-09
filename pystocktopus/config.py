@@ -1,7 +1,7 @@
 """
 Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
-PyStoAnalyzer.
+pystocktopus.
 """
 import os
 """

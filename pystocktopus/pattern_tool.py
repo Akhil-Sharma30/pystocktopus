@@ -12,7 +12,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 import matplotlib.dates as mdates
 #from mplfinance import candlestick_ohlc
-import PyStoAnalyzer.config as config
+import pystocktopus.config as config
 
 class DisplayPattern:
     #A function that loads pattern data
@@ -24,7 +24,7 @@ class DisplayPattern:
         :return: List of Pattern objects
         """
         patterns = []
-        pattern_directory = '../PyStoAnalyzer/Data/Pattern' 
+        pattern_directory = '../pystocktopus/Data/Pattern' 
         for filename in os.listdir(pattern_directory):
             with open(os.path.join(pattern_directory, filename)) as json_file:
                 try:

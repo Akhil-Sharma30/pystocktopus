@@ -1,4 +1,4 @@
-site_name: PyStoAnalyzer
+site_name: pystocktopus
 theme: 
   name: material
   features:
@@ -27,12 +27,12 @@ plugins:
   - mkdocstrings
 
 
-site_description: Documentation for PyStoAnalyzer
+site_description: Documentation for pystocktopus
 site_author: Akhil Sharma
 site_url: 
 
-repo_url: https://github.com/Akhil-Sharma30/PyStoAnalyzer
-repo_name: PyStoAnalyzer
+repo_url: https://github.com/Akhil-Sharma30/pystocktopus
+repo_name: pystocktopus
 edit_uri: ./edit/main/docs
 
 extra:

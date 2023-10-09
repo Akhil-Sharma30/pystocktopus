@@ -1,1 +1,1 @@
-::: PyStoAnalyzer.stock_csv
+::: pystocktopus.stock_csv

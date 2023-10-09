@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import importlib.metadata
 
-project = "PyStoAnalyzer"
+project = "pystocktopus"
 copyright = "2023, Akhil Sharma"
 author = "Akhil Sharma"
-version = release = importlib.metadata.version("PyStoAnalyzer")
+version = release = importlib.metadata.version("pystocktopus")
 
 extensions = [
     "myst_parser",

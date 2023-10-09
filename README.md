@@ -1,4 +1,4 @@
-# PyStoAnalyzer: Your Ultimate Stock Data Management and Analysis Toolkit
+# pystocktopus: Your Ultimate Stock Data Management and Analysis Toolkit
 
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
@@ -14,44 +14,44 @@
 <!-- SPHINX-START -->
 
 <!-- prettier-ignore-start -->
-[actions-badge]:            https://github.com/Akhil-Sharma30/PyStoAnalyzer/workflows/CI/badge.svg
-[actions-link]:             https://github.com/Akhil-Sharma30/PyStoAnalyzer/actions
-[conda-badge]:              https://img.shields.io/conda/vn/conda-forge/PyStoAnalyzer
-[conda-link]:               https://github.com/conda-forge/PyStoAnalyzer-feedstock
+[actions-badge]:            https://github.com/Akhil-Sharma30/pystocktopus/workflows/CI/badge.svg
+[actions-link]:             https://github.com/Akhil-Sharma30/pystocktopus/actions
+[conda-badge]:              https://img.shields.io/conda/vn/conda-forge/pystocktopus
+[conda-link]:               https://github.com/conda-forge/pystocktopus-feedstock
 [github-discussions-badge]: https://img.shields.io/static/v1?label=Discussions&message=Ask&color=blue&logo=github
-[github-discussions-link]:  https://github.com/Akhil-Sharma30/PyStoAnalyzer/discussions
-[pypi-link]:                https://pypi.org/project/PyStoAnalyzer/
-[pypi-platforms]:           https://img.shields.io/pypi/pyversions/PyStoAnalyzer
-[pypi-version]:             https://img.shields.io/pypi/v/PyStoAnalyzer
-[rtd-badge]:                https://readthedocs.org/projects/PyStoAnalyzer/badge/?version=latest
-[rtd-link]:                 https://PyStoAnalyzer.readthedocs.io/en/latest/?badge=latest
+[github-discussions-link]:  https://github.com/Akhil-Sharma30/pystocktopus/discussions
+[pypi-link]:                https://pypi.org/project/pystocktopus/
+[pypi-platforms]:           https://img.shields.io/pypi/pyversions/pystocktopus
+[pypi-version]:             https://img.shields.io/pypi/v/pystocktopus
+[rtd-badge]:                https://readthedocs.org/projects/pystocktopus/badge/?version=latest
+[rtd-link]:                 https://pystocktopus.readthedocs.io/en/latest/?badge=latest
 
 <!-- prettier-ignore-end -->
 Managing and analyzing stock data can be a complex and time-consuming task for investors and traders. Keeping track of historical stock data, updating it with new information, and extracting valuable insights from the data are all crucial aspects of making informed investment decisions. 
 
-Introducing **PyStoAnalyzer**, a powerful Python package for **Python 3.7+** designed to simplify stock data management, analysis, prediction and also use the news sentiments of stocks volatality.
+Introducing **pystocktopus**, a powerful Python package for **Python 3.7+** designed to simplify stock data management, analysis, prediction and also use the news sentiments of stocks volatality.
 
-**PyStoAnalyzer** is an easy-to-use and versatile library that empowers users to maintain and analyze their stock data with ease. Whether you are an experienced trader or a novice investor, PyStoAnalyzer provides a comprehensive set of tools to streamline your stock-related tasks.
+**pystocktopus** is an easy-to-use and versatile library that empowers users to maintain and analyze their stock data with ease. Whether you are an experienced trader or a novice investor, pystocktopus provides a comprehensive set of tools to streamline your stock-related tasks.
 
 ## Key Features
 
 * CSV Data Maintenance:
 
-PyStoAnalyzer provides a seamless solution for maintaining your stock data in CSV format. Whether you need to update existing data or extract new data from a CSV file, this package streamlines the process, ensuring that your stock data is always up-to-date and readily accessible.
+pystocktopus provides a seamless solution for maintaining your stock data in CSV format. Whether you need to update existing data or extract new data from a CSV file, this package streamlines the process, ensuring that your stock data is always up-to-date and readily accessible.
 
 * Real-time Stock Analysis:
 
-Stay ahead of the curve with real-time stock analysis. PyStoAnalyzer offers tools to analyze your stock's performance and predict how news and events will impact its growth. It leverages advanced algorithms to assess whether news sentiment for a specific stock over a defined period is positive or negative, helping you make informed investment decisions.
+Stay ahead of the curve with real-time stock analysis. pystocktopus offers tools to analyze your stock's performance and predict how news and events will impact its growth. It leverages advanced algorithms to assess whether news sentiment for a specific stock over a defined period is positive or negative, helping you make informed investment decisions.
 
 * Current Closing Price Extraction:
 
-PyStoAnalyzer simplifies the process of extracting the current closing price for a specific stock. With just a few lines of code, you can access up-to-the-minute price information, enabling you to monitor your investments with precision.
+pystocktopus simplifies the process of extracting the current closing price for a specific stock. With just a few lines of code, you can access up-to-the-minute price information, enabling you to monitor your investments with precision.
 
 ## Here are some examples of how the package can be used:
 
 ## Upgrade your CSV dashboard with new data:
 ```.py
-from PyStoAnalyzer.core import StockExtractor
+from pystocktopus.core import StockExtractor
 
 # Define the path to the user's CSV file and the column names for tickers and amounts
 user_csv_file = 'TestCSV.csv'
@@ -91,7 +91,7 @@ CSVDataHandler.close_list_csv(closing_data)
 
 ```.py
 # Load the CSV dashboard
-dashboard = PyStoAnalyzer.load_dashboard("my_dashboard.csv")
+dashboard = pystocktopus.load_dashboard("my_dashboard.csv")
 
 # Calculate a technical indicator, such as the moving average
 moving_average = dashboard.calculate_moving_average(period=20)
@@ -132,7 +132,7 @@ most_negative_news = news_data[sentiments == "Negative"].sort_values("score", as
 
 # Display the most positive and negative news articles:
 ```.py
-import PyStoAnalyzer.news_analysis as news
+import pystocktopus.news_analysis as news
 
 result_strings = {
     "Ticker1": "Day1: i am excellent\nDay2: i am good\n",
@@ -146,7 +146,7 @@ news.News.create_csv_with_predictions(csv_filename,news_data)
 
 # Get the current closing price for Apple
 ```.py
-from PyStoAnalyzer.core import StockExtractor
+from pystocktopus.core import StockExtractor
 
 ticker_values='AMZN'
 timespan= 'DAY'
@@ -160,11 +160,11 @@ print(stock_closing_price_list)
 print("Current closing price for Apple:", stock_closing_price_list)
 ```
 
-### Install PyStoAnalyzer
+### Install pystocktopus
 
-`PyStoAnalyzer` uses modern `Python` packaging and can be installed using `pip` -
+`pystocktopus` uses modern `Python` packaging and can be installed using `pip` -
 ```
-python -m pip install PyStoAnalyzer
+python -m pip install pystocktopus
 ```
 ### Setting-up API Key
 To use the software properly setup these *API keys* to completely use the features of the 
@@ -185,5 +185,5 @@ export news_api="YOUR-API-KEY"
 
 ## Contributing
 
-If you want to contribute to `PyStoAnalyzer` (thanks!), please have a look at our
-[Contributing Guide](https://github.com/Akhil-Sharma30/PyStoAnalyzer/blob/main/CONTRIBUTING.md).
+If you want to contribute to `pystocktopus` (thanks!), please have a look at our
+[Contributing Guide](https://github.com/Akhil-Sharma30/pystocktopus/blob/main/CONTRIBUTING.md).

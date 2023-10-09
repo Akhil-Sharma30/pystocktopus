@@ -1,1 +1,1 @@
-::: PyStoAnalyzer.pattern_tool
+::: pystocktopus.pattern_tool

@@ -1,3 +1,3 @@
 ## Config
 
-::: PyStoAnalyzer.config
+::: pystocktopus.config

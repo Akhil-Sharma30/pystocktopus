@@ -1,6 +1,6 @@
 # Installation
 
-Follow the steps below to install `PyStoAnalyzer` locally.
+Follow the steps below to install `pystocktopus` locally.
 
 ## Create a virtual environment
 
@@ -14,10 +14,10 @@ python -m venv tester_env
 
 ## Install dependencies
 
-`PyStoAnalyzer` uses modern `Python` packaging and can be installed using `pip` -
+`pystocktopus` uses modern `Python` packaging and can be installed using `pip` -
 
 ```
-python -m pip install PyStoAnalyzer
+python -m pip install pystocktopus
 ```
 ### Setting-up Project 
 To use the software properly setup these *API keys* to completely use the features of the 
@@ -35,21 +35,21 @@ export api_key="YOUR-API-KEY"
 export news_api="YOUR-API-KEY"
 
 ```
-## Build PyStoAnalyzer from source
+## Build pystocktopus from source
 
-If you want to develop `PyStoAnalyzer`, or use its latest commit (!can be unstable!),
+If you want to develop `pystocktopus`, or use its latest commit (!can be unstable!),
 you might want to install it from the source -
 
 - Clone this repository
 
 ```bash
-git clone https://github.com/Akhil-Sharma30/PyStoAnalyzer
+git clone https://github.com/Akhil-Sharma30/pystocktopus
 ```
 
 - Change directory
 
 ```bash
-cd PyStoAnalyzer
+cd pystocktopus
 ```
 
 - Install the package in editable mode with the "dev" dependencies
@@ -59,5 +59,5 @@ python -m pip install -e ".[dev]"
 ```
 
 Feel free to read our
-[Contributing Guide](https://github.com/Akhil-Sharma30/PyStoAnalyzer/blob/main/CONTRIBUTING.md)
-for more information on developing `PyStoAnalyzer`.
+[Contributing Guide](https://github.com/Akhil-Sharma30/pystocktopus/blob/main/CONTRIBUTING.md)
+for more information on developing `pystocktopus`.

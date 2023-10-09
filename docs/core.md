@@ -1,1 +1,1 @@
-::: PyStoAnalyzer.core
+::: pystocktopus.core

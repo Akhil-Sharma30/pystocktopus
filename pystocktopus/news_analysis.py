@@ -1,11 +1,11 @@
 #Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
-from PyStoAnalyzer.config import news_api
+from pystocktopus.config import news_api
 from typing import List,Dict
 from datetime import datetime, timedelta
 from newsapi import NewsApiClient
 from transformers import pipeline
-from PyStoAnalyzer.core import PastDays
+from pystocktopus.core import PastDays
 import pandas as pd
 
 class News:

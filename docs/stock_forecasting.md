@@ -1,1 +1,1 @@
-::: PyStoAnalyzer.stock_forecasting
+::: pystocktopus.stock_forecasting

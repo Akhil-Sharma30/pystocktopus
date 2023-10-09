@@ -1,1 +1,1 @@
-::: PyStoAnalyzer.news_analysis
+::: pystocktopus.news_analysis
