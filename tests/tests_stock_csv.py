@@ -1,28 +1,32 @@
-import pytest
 from pystocktopus.stock_csv import CSVDataHandler
 
-# Set the path to the CSV file
-csv_file = "stock_data.csv"
+# Define the path to the user's CSV file and the column names for tickers and amounts
+user_csv_file = 'TestCSV.csv'
+column_ticker_name = "Tickers"
+column_amount_name = "Amount"
 
-# Set the name of the column to read
-csv_stock_column_name = "closing_stock_data_AAPL"
+# Print the user's CSV file path
+print(user_csv_file)
 
-# Read the data from the specified column in the CSV file
-data_values = CSVDataHandler.csv_data_reader(csv_file, csv_stock_column_name)
+# Read ticker values from the CSV file using the specified column name
+ticker_values = CSVDataHandler.csv_data_reader(user_csv_file, column_ticker_name)
 
-# Set the path to the CSV file containing the closing prices
-close_file = "closing_prices.csv"
+# Read amount values from the CSV file using the specified column name
+amount_values = CSVDataHandler.csv_data_reader(user_csv_file, column_amount_name)
 
-# Read the closing prices from the CSV file
-close_list = CSVDataHandler.csv_data_reader(close_file, csv_stock_column_name)
+# Print the extracted ticker and amount values
+print(ticker_values)
+print(amount_values)
 
-# Combine the data of the bought shares ticker and closing price values
-combined_values = CSVDataHandler.combine_data_csv(data_values, close_list)
+# Sample closing data for SONY and AMZN stocks
+closing_data = {'SONY': [93.6, 93.49, 91.07, 90.03, 90.19, 90.44, 89.82, 83.85], 
+                'AMZN': [133.68, 131.69, 128.21, 128.91, 139.57, 142.22, 139.94, 137.85]}
 
-# Update the CSV file with predicted and calculated values
-CSVDataHandler.update_csv(csv_file, combined_values, new_column_name="Price Calculated")
+# Combine the amount values with the closing data
+result = CSVDataHandler.combine_data_csv(amount_values, closing_data)
 
-# Store the Closing_List Stock Result in the .CSV file
-closing_data_fieldname = ["closing_stock_data"]
-ticker_data = {"AAPL": data_values, "MSFT": combined_values}
-CSVDataHandler.close_list_csv(ticker_data, closing_data_fieldname)
+# Update the user's CSV file with the combined data
+CSVDataHandler.update_csv(user_csv_file, result)
+
+# Close and clean up resources for the closing data
+CSVDataHandler.close_list_csv(closing_data)

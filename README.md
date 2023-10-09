@@ -60,7 +60,7 @@ pystocktopus simplifies the process of extracting the current closing price for 
 
 ## Upgrade your CSV dashboard with new data:
 ```.py
-from pystocktopus.core import StockExtractor
+from pystocktopus.stock_csv import CSVDataHandler
 
 # Define the path to the user's CSV file and the column names for tickers and amounts
 user_csv_file = 'TestCSV.csv'
@@ -115,28 +115,39 @@ candlestick_chart = dashboard.plot_candlestick_chart()
 # Do something with the analysis results
 # For example, display the candlestick chart:
 ```.py
-candlestick_chart.show()
-Use code with caution. Learn more
+from pystocktopus.stock_forecasting import DataAnalysis
 
-Predict stock news sentiment:
-Python
-import stock_csv_dashboard
+# Create an interactive bar chart of the stock price data with volume and 20-day moving average
+DataAnalysis.interactive_bar(csv_file)
 
-# Load the CSV dashboard
-dashboard = stock_csv_dashboard.load_dashboard("my_dashboard.csv")
+# Create an interactive candlestick chart of the stock price data
+DataAnalysis.interactive_sticks(csv_file)
 
-# Load the stock news data
-news_data = stock_csv_dashboard.load_news_data("AAPL")
-
-# Predict the sentiment of the stock news articles
-sentiments = dashboard.predict_news_sentiment(news_data)
+# Perform a basic analysis of the stock price data
+DataAnalysis.stock_analysis(csv_file)
 ```
 
 # Do something with the sentiment predictions
 # For example, identify the most positive and negative news articles:
 ```.py
-most_positive_news = news_data[sentiments == "Positive"].sort_values("score", ascending=False).head(1)
-most_negative_news = news_data[sentiments == "Negative"].sort_values("score", ascending=True).head(1)
+from pystocktopus.news_analysis import News
+
+# Create a list of tickers to extract news articles for
+ticker_values = ["GOOGL"]
+
+# Specify the date range to extract news articles for
+predict_date = "2023-08-05"
+
+# Call the new_data_extract() method to extract news articles for the given tickers and date range
+news_articles = News.new_data_extract(ticker_values, predict_date)
+
+# Call the news_predict_analysis() method to predict the sentiment of the news articles for each ticker
+analysis_results = News.news_predict_analysis(news_articles)
+
+# Call the create_csv_with_predictions() method to create a CSV file with the predicted sentiment for each ticker
+csv_filename = "news_predictions.csv"
+News.create_csv_with_predictions(csv_filename, analysis_results)
+
 ```
 
 # Display the most positive and negative news articles:
@@ -153,20 +164,28 @@ csv_filename = 'Test_result'
 news.News.create_csv_with_predictions(csv_filename,news_data)
 ```
 
-# Get the current closing price for Apple
+# Get the current closing price for Amazon
 ```.py
+# Import the StockExtractor class from the pystocktopus.core library.
 from pystocktopus.core import StockExtractor
 
-ticker_values='AMZN'
-timespan= 'DAY'
-stock_closing_price_list = StockExtractor.ticker_data_collection(ticker_values,'day',1,'2023-08-09')
-print(stock_closing_price_list)
+# Set the ticker values, timespan, multiplier, and user date.
+ticker_values = ["AMZN", "SONY"]
+timespan = "DAY"
+multiplier = 1
+user_date = "2023-09-20"
+
+# Extract the closing prices for the specified tickers, timespan, multiplier, and user date.
+Closing_price = StockExtractor.ticker_data_collection(ticker_values, timespan, multiplier, user_date)
+
+# Print the closing prices to the console.
+print(Closing_price)
 ```
 
 # Do something with the current closing price
 # For example, print it to the console:
 ```.py
-print("Current closing price for Apple:", stock_closing_price_list)
+print("Current closing price for Amazon:", Closing_price)
 ```
 
 ### Install pystocktopus
