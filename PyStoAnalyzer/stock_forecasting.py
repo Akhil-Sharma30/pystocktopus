@@ -6,12 +6,13 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense, Dropout
+from tensorflow.keras.layers import LSTM, Dense
 from typing import cast,List,TypeVar,Tuple,Any
 import pandas as pd
 import mplfinance as fplt
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from tensorflow.keras.optimizers import Adam
 
 class ModelStockData:
     def _csvDataCollection(csv_file: str,sequence_length,stock_closing_price_column_name: str):
@@ -66,7 +67,19 @@ class ModelStockData:
         X_tensorflow_test = tf.convert_to_tensor(X_test, dtype=tf.float32)
         y_tensorflow_test = tf.convert_to_tensor(y_test, dtype=tf.float32)
 
-        return X_tensorflow_train,y_tensorflow_train,X_test
+        return X_tensorflow_train, y_tensorflow_train, X_tensorflow_test, y_tensorflow_test, scaler
+
+    def _mean_absolute_percentage_error(y_true, y_pred):
+        """Calculates the mean absolute percentage error (MAPE) between two arrays.
+
+        Args:
+            y_true (np.ndarray): The true values.
+            y_pred (np.ndarray): The predicted values.
+
+        Returns:
+            float: The MAPE.
+        """
+        return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
     def create_and_fit_lstm_model(csv_file:str,
                                   sequence_length:int=10,
@@ -74,8 +87,8 @@ class ModelStockData:
                                   lstm_units:list = [16],
                                   epochs = 50, lr:float = 0.0008, 
                                   stacked:bool = False,
-                                  stock_closing_price_column_name:str='closing_stock_data_SONY'):
-        """Creates and fits a long short-term memory (LSTM) model to predict stock prices.
+                                  stock_closing_price_column_name:str='closing_stock_data_SONY')-> None:
+        """Creates and fits a long short-term memory (LSTM) model to predict stock prices, and returns the predicted value with the lowest MAPE.
 
         Args:
             csv_file (str): The path to the CSV file containing the stock price data.
@@ -84,15 +97,15 @@ class ModelStockData:
             lstm_units (list): A list of the number of units in each LSTM layer.
             epochs (int): The number of epochs to train the model for.
             lr (float): The learning rate to use during training.
-            stacked (bool): Whether to use a stacked LSTM model or Single LSTM Layer.
+            stacked (bool): Whether to use a stacked LSTM model or Single Layer LSTM.
             stock_closing_price_column_name (str): The name of the column in the CSV file containing
                 the stock closing price data.
 
         Returns:
-            float: The mean predicted stock price for the test set.
+            float: The predicted stock price with the lowest MAPE.
         """
         # setting the from the user csv file
-        X_tensorflow_train,y_tensorflow_train,X_test= ModelStockData._csvDataCollection(csv_file,sequence_length,stock_closing_price_column_name)
+        X_tensorflow_train, y_tensorflow_train, X_tensorflow_test, y_tensorflow_test, scaler = ModelStockData._csvDataCollection(csv_file, sequence_length,stock_closing_price_column_name)
 
         input_shape = (X_tensorflow_train.shape[1], X_tensorflow_train.shape[2])
         if stacked is False:
@@ -105,14 +118,26 @@ class ModelStockData:
             model.add(Dense(1))
 
 
-        model.compile(optimizer='adam', loss='mean_squared_error')
-        model.fit(X_tensorflow_train, y_tensorflow_train, epochs)
-        predicted_prices = model.predict(X_test)
+        custom_optimizer = Adam(learning_rate=lr)
+        model.compile(optimizer=custom_optimizer, loss='mean_squared_error')
+        model.fit(X_tensorflow_train, y_tensorflow_train, epochs=epochs)
+        predicted_prices = model.predict(X_tensorflow_test)
 
         # Inverse transform the scaled data to get the actual stock prices
         predicted_prices = scaler.inverse_transform(predicted_prices)
-        value = np.mean(predicted_prices)
-        print(value)
+        mape_values = []
+
+        # Calculate MAPE for each prediction and store it in mape_values
+        for i in range(len(y_tensorflow_test)):
+            mape = ModelStockData._mean_absolute_percentage_error(y_tensorflow_test[i], predicted_prices[i])
+            mape_values.append(mape)
+
+        # Find the index of the prediction with the lowest MAPE
+        min_mape_index = np.argmin(mape_values)
+
+        # Get the corresponding predicted value
+        predicted_value = predicted_prices[min_mape_index][0]
+        print(predicted_value)
 
 class DataAnalysis:
     """Class for performing data analysis on stock data."""
