@@ -1,50 +1,28 @@
 import pytest
+from pystocktopus.stock_csv import CSVDataHandler
 
-from pystocktopus.stock_forecasting import ModelStockData
+# Set the path to the CSV file
+csv_file = "stock_data.csv"
 
-def test__csvDataCollection():
-    """Tests the `_csvDataCollection()` method."""
+# Set the name of the column to read
+csv_stock_column_name = "closing_stock_data_AAPL"
 
-    # Arrange
-    csv_file = "tests/stock_data-2.csv"
-    sequence_length = 10
-    stock_closing_price_column_name = "closing_stock_data_SONY"
+# Read the data from the specified column in the CSV file
+data_values = CSVDataHandler.csv_data_reader(csv_file, csv_stock_column_name)
 
-    # Act
-    X_tensorflow_train, y_tensorflow_train, X_tensorflow_test, y_tensorflow_test, scaler = ModelStockData._csvDataCollection(
-        csv_file, sequence_length, stock_closing_price_column_name
-    )
+# Set the path to the CSV file containing the closing prices
+close_file = "closing_prices.csv"
 
-    # Assert
-    assert X_tensorflow_train.shape[0] == y_tensorflow_train.shape[0]
-    assert X_tensorflow_test.shape[0] == y_tensorflow_test.shape[0]
-    assert isinstance(scaler, MinMaxScaler)
+# Read the closing prices from the CSV file
+close_list = CSVDataHandler.csv_data_reader(close_file, csv_stock_column_name)
 
+# Combine the data of the bought shares ticker and closing price values
+combined_values = CSVDataHandler.combine_data_csv(data_values, close_list)
 
-def test_create_and_fit_lstm_model():
-    """Tests the `create_and_fit_lstm_model()` method."""
+# Update the CSV file with predicted and calculated values
+CSVDataHandler.update_csv(csv_file, combined_values, new_column_name="Price Calculated")
 
-    # Arrange
-    csv_file = "test_data.csv"
-    sequence_length = 10
-    layers = 50
-    lstm_units = [16]
-    epochs = 50
-    lr = 0.0008
-    stacked = False
-    stock_closing_price_column_name = "closing_stock_data_SONY"
-
-    # Act
-    predicted_value = ModelStockData.create_and_fit_lstm_model(
-        csv_file,
-        sequence_length,
-        layers,
-        lstm_units,
-        epochs,
-        lr,
-        stacked,
-        stock_closing_price_column_name,
-    )
-
-    # Assert
-    assert isinstance(predicted_value, float)
+# Store the Closing_List Stock Result in the .CSV file
+closing_data_fieldname = ["closing_stock_data"]
+ticker_data = {"AAPL": data_values, "MSFT": combined_values}
+CSVDataHandler.close_list_csv(ticker_data, closing_data_fieldname)

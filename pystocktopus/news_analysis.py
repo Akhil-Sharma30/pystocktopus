@@ -33,13 +33,12 @@ class News:
             
         return result_strings
 
-    def new_data_extract(ticker_values,predict_date,days_lag: int=2):
+    def new_data_extract(ticker_values,predict_date):
         """Extracts news articles for a given list of tickers and date range.
 
         Args:
             ticker_values (List[str]): A list of ticker values to extract news articles for.
             predict_date (str): The date to predict news articles for.
-            days_lag (int): The number of days before the predict_date to extract news articles for.
 
         Returns:
             Dict[str, str]: A dictionary of news articles for each ticker.
@@ -53,7 +52,6 @@ class News:
 
         # Define date range
         start_date = datetime.strptime(predict_date, '%Y-%m-%d')
-        end_date = PastDays.CalculateDate(start_date,days_lag)
 
         # Iterate through the ticker values and fetch articles for each
         for ticker in ticker_values:
@@ -61,7 +59,7 @@ class News:
                 q=ticker,
                 sources='bbc-news,the-verge',
                 from_param=start_date,
-                to=end_date,
+                to=start_date,
                 language='en',
                 sort_by='relevancy'
             )
