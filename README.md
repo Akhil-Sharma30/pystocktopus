@@ -11,6 +11,8 @@
 
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status][rtd-badge]][rtd-link]
+![GitHub issues](https://img.shields.io/github/issues/Akhil-Sharma30/pystocktopus)
+
 
 [![PyPI version][pypi-version]][pypi-link]
 [![Conda-Forge][conda-badge]][conda-link]
@@ -35,7 +37,7 @@
 [pypi-platforms]:           https://img.shields.io/pypi/pyversions/pystocktopus
 [pypi-version]:             https://img.shields.io/pypi/v/pystocktopus
 [rtd-badge]:                https://readthedocs.org/projects/pystocktopus/badge/?version=latest
-[rtd-link]:                 https://pystocktopus.readthedocs.io/en/latest/?badge=latest
+[rtd-link]:                 pystocktopus.readthedocs.io/en/latest/
 
 <!-- prettier-ignore-end -->
 Managing and analyzing stock data can be a complex and time-consuming task for investors and traders. Keeping track of historical stock data, updating it with new information, and extracting valuable insights from the data are all crucial aspects of making informed investment decisions. 
