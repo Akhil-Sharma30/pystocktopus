@@ -41,23 +41,23 @@ dependencies = [
   "pandas",
   "plotly",
   "mplfinance",
+  "newsapi-python",
 ]
 
 [project.optional-dependencies]
 test = [
-  "pytest >=6",
-  "pytest-cov >=3",
+  "pytest",
+  "pytest-cov",
 ]
 dev = [
-  "pytest >=6",
-  "pytest-cov >=3",
+  "pytest",
+  "pytest-cov",
 ]
 docs = [
-  "sphinx>=7.0",
-  "myst_parser>=0.13",
+  "myst_parser",
   "sphinx_copybutton",
   "sphinx_autodoc_typehints",
-  "furo>=2023.08.17",
+  "furo",
   "mkdocs-material",
 ]
 
@@ -70,7 +70,7 @@ Changelog = "https://github.com/Akhil-Sharma30/pystocktopus/releases"
 
 [tool.hatch]
 version.source = "vcs"
-build.hooks.vcs.version-file = "pystocktopus/_version.py"
+build.hooks.vcs.version-file = "pystocktopus/src/_version.py"
 envs.default.dependencies = [
   "pytest",
   "pytest-cov",
@@ -163,7 +163,7 @@ isort.required-imports = ["from __future__ import annotations"]
 
 [tool.pylint]
 py-version = "3.8"
-ignore-paths = [".*/_version.py"]
+ignore-paths = ["./_version.py"]
 reports.output-format = "colorized"
 similarities.ignore-imports = "yes"
 messages_control.disable = [

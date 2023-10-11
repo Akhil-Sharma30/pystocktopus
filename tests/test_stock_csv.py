@@ -1,9 +1,8 @@
 from pystocktopus.stock_csv import CSVDataHandler
-import pytest
 import pandas as pd
 
 # Define the path to the user's CSV file and the column names for tickers and amounts
-user_csv_file = 'TestCSV.csv'
+user_csv_file = 'tests/TestCSV.csv'
 column_ticker_name = "Tickers"
 column_amount_name = "Amount"
 

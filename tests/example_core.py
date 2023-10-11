@@ -11,7 +11,7 @@ user_date = '2023-09-20'
 Closing_price = StockExtractor.ticker_data_collection(ticker_values, timespan, multiplier, user_date)
 
 def test_ticker_data_collection():
-    assert Closing_price==Closing_price
+    assert Closing_price is not None
 
 # Print the closing prices to the console.
 print(Closing_price)
