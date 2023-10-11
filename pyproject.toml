@@ -31,7 +31,7 @@ classifiers = [
 dynamic = ["version"]
 dependencies = [
   "polygon-api-client",
-  "sklearn",
+  "scikit-learn",
   "pmdarima",
   "urllib3",
   "typing",
