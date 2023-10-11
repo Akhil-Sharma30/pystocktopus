@@ -10,7 +10,7 @@
 
 
 [![Actions Status][actions-badge]][actions-link]
-[![Documentation Status][rtd-badge]][rtd-link]
+[![Documentation Status](https://readthedocs.org/projects/pystocktopus/badge/?version=latest)](https://pystocktopus.readthedocs.io/en/latest/?badge=latest)
 ![GitHub issues](https://img.shields.io/github/issues/Akhil-Sharma30/pystocktopus)
 
 
