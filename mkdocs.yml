@@ -29,7 +29,7 @@ plugins:
 
 site_description: Documentation for pystocktopus
 site_author: Akhil Sharma
-site_url: 
+site_url: https://pystocktopus.readthedocs.io/en/latest/
 
 repo_url: https://github.com/Akhil-Sharma30/pystocktopus
 repo_name: pystocktopus
