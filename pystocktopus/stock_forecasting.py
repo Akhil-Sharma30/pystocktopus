@@ -83,7 +83,7 @@ class ModelStockData:
 
     def create_and_fit_lstm_model(csv_file:str,
                                   sequence_length:int=10,
-                                  layers:int=50,
+                                  layers:int=10,
                                   lstm_units:list = [16],
                                   epochs = 50, lr:float = 0.0008, 
                                   stacked:bool = False,
