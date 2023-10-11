@@ -35,8 +35,9 @@ dependencies = [
   "pmdarima",
   "urllib3",
   "typing",
-  "transformers",
   "matplotlib",
+  "tensorflow",
+  "transformers",
   "pandas",
   "plotly",
   "mplfinance",
@@ -69,7 +70,7 @@ Changelog = "https://github.com/Akhil-Sharma30/pystocktopus/releases"
 
 [tool.hatch]
 version.source = "vcs"
-build.hooks.vcs.version-file = "pystocktopus/src/pystocktopus/_version.py"
+build.hooks.vcs.version-file = "pystocktopus/_version.py"
 envs.default.dependencies = [
   "pytest",
   "pytest-cov",

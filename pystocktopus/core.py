@@ -4,6 +4,7 @@ from polygon import RESTClient
 import pystocktopus.config as config
 from typing import cast
 from urllib3 import HTTPResponse
+from datetime import datetime, timedelta
 import json
 import csv
 import pandas as pd

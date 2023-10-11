@@ -14,5 +14,5 @@ __all__ = ("__version__",)
 import pystocktopus.config
 from pystocktopus.stock_csv import CSVDataHandler
 from pystocktopus.news_analysis import News
-import pystocktopus.core
+from pystocktopus.core import StockExtractor
 import pystocktopus.pattern_tool

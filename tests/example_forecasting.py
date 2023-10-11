@@ -2,7 +2,7 @@
 from pystocktopus.stock_forecasting import ModelStockData, DataAnalysis
 
 # Specify the path to the CSV file containing the stock data
-csv_file = "/content/stock_data-2.csv"
+csv_file = "stock_data-21.csv"
 
 # Create and fit an LSTM model to the stock data
 ModelStockData.create_and_fit_lstm_model(csv_file, sequence_length=10, epochs=50, stacked=False)
