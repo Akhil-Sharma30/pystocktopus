@@ -15,7 +15,6 @@
 
 
 [![PyPI version][pypi-version]][pypi-link]
-[![Conda-Forge][conda-badge]][conda-link]
 [![PyPI platforms][pypi-platforms]][pypi-link]
 ![GitHub](https://img.shields.io/github/license/Akhil-Sharma30/pystocktopus?color=green)
 
