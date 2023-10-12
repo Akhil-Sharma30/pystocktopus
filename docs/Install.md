@@ -19,14 +19,17 @@ python -m venv tester_env
 ```
 python -m pip install pystocktopus
 ```
-### Setting-up Project 
-To use the software properly setup these *API keys* to completely use the features of the 
-project:
+
+### Setting-up Project
+
+To use the software properly setup these _API keys_ to completely use the
+features of the project:
 
 1. `Newsapi` access from [this](https://newsapi.org/).
 2. `Polygon.io` API access from [this](https://polygon.io/).
 
 #### Setup API Globally
+
 ```
 #Polyon API KEY
 export api_key="YOUR-API-KEY"
@@ -35,10 +38,11 @@ export api_key="YOUR-API-KEY"
 export news_api="YOUR-API-KEY"
 
 ```
+
 ## Build pystocktopus from source
 
-If you want to develop `pystocktopus`, or use its latest commit (!can be unstable!),
-you might want to install it from the source -
+If you want to develop `pystocktopus`, or use its latest commit (!can be
+unstable!), you might want to install it from the source -
 
 - Clone this repository
 

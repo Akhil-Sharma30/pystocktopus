@@ -1,4 +1,5 @@
 # pystocktopus: Your Ultimate Stock Data Management and Analysis Toolkit
+
 <!-- ![PyPI - Version](https://img.shields.io/pypi/v/pystocktopus)
 ![Codecov](https://img.shields.io/codecov/c/github/Akhil-Sharma30/pystocktopus)
 ![PyPI - License](https://img.shields.io/pypi/l/pystocktopus)
@@ -8,20 +9,15 @@
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pystocktopus)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Akhil-Sharma30/pystocktopus/CI) -->
 
-
 [![Actions Status][actions-badge]][actions-link]
 [![Documentation Status](https://readthedocs.org/projects/pystocktopus/badge/?version=latest)](https://pystocktopus.readthedocs.io/en/latest/?badge=latest)
 ![GitHub issues](https://img.shields.io/github/issues/Akhil-Sharma30/pystocktopus)
-
 
 [![PyPI version][pypi-version]][pypi-link]
 [![PyPI platforms][pypi-platforms]][pypi-link]
 ![GitHub](https://img.shields.io/github/license/Akhil-Sharma30/pystocktopus?color=green)
 
-
 [![GitHub Discussion][github-discussions-badge]][github-discussions-link]
-
-
 
 <!-- SPHINX-START -->
 
@@ -39,29 +35,48 @@
 [rtd-link]:                 pystocktopus.readthedocs.io/en/latest/
 
 <!-- prettier-ignore-end -->
-Managing and analyzing stock data can be a complex and time-consuming task for investors and traders. Keeping track of historical stock data, updating it with new information, and extracting valuable insights from the data are all crucial aspects of making informed investment decisions. 
 
-Introducing **pystocktopus**, a powerful Python package for **Python 3.7+** designed to simplify stock data management, analysis, prediction and also use the news sentiments of stocks volatality.
+Managing and analyzing stock data can be a complex and time-consuming task for
+investors and traders. Keeping track of historical stock data, updating it with
+new information, and extracting valuable insights from the data are all crucial
+aspects of making informed investment decisions.
 
-**pystocktopus** is an easy-to-use and versatile library that empowers users to maintain and analyze their stock data with ease. Whether you are an experienced trader or a novice investor, pystocktopus provides a comprehensive set of tools to streamline your stock-related tasks.
+Introducing **pystocktopus**, a powerful Python package for **Python 3.7+**
+designed to simplify stock data management, analysis, prediction and also use
+the news sentiments of stocks volatality.
+
+**pystocktopus** is an easy-to-use and versatile library that empowers users to
+maintain and analyze their stock data with ease. Whether you are an experienced
+trader or a novice investor, pystocktopus provides a comprehensive set of tools
+to streamline your stock-related tasks.
 
 ## Key Features
 
-* CSV Data Maintenance:
+- CSV Data Maintenance:
 
-pystocktopus provides a seamless solution for maintaining your stock data in CSV format. Whether you need to update existing data or extract new data from a CSV file, this package streamlines the process, ensuring that your stock data is always up-to-date and readily accessible.
+pystocktopus provides a seamless solution for maintaining your stock data in CSV
+format. Whether you need to update existing data or extract new data from a CSV
+file, this package streamlines the process, ensuring that your stock data is
+always up-to-date and readily accessible.
 
-* Real-time Stock Analysis:
+- Real-time Stock Analysis:
 
-Stay ahead of the curve with real-time stock analysis. pystocktopus offers tools to analyze your stock's performance and predict how news and events will impact its growth. It leverages advanced algorithms to assess whether news sentiment for a specific stock over a defined period is positive or negative, helping you make informed investment decisions.
+Stay ahead of the curve with real-time stock analysis. pystocktopus offers tools
+to analyze your stock's performance and predict how news and events will impact
+its growth. It leverages advanced algorithms to assess whether news sentiment
+for a specific stock over a defined period is positive or negative, helping you
+make informed investment decisions.
 
-* Current Closing Price Extraction:
+- Current Closing Price Extraction:
 
-pystocktopus simplifies the process of extracting the current closing price for a specific stock. With just a few lines of code, you can access up-to-the-minute price information, enabling you to monitor your investments with precision.
+pystocktopus simplifies the process of extracting the current closing price for
+a specific stock. With just a few lines of code, you can access up-to-the-minute
+price information, enabling you to monitor your investments with precision.
 
 ## Here are some examples of how the package can be used:
 
 ## Upgrade your CSV dashboard with new data:
+
 ```.py
 from pystocktopus.stock_csv import CSVDataHandler
 
@@ -84,7 +99,7 @@ print(ticker_values)
 print(amount_values)
 
 # Sample closing data for SONY and AMZN stocks
-closing_data = {'SONY': [93.6, 93.49, 91.07, 90.03, 90.19, 90.44, 89.82, 83.85], 
+closing_data = {'SONY': [93.6, 93.49, 91.07, 90.03, 90.19, 90.44, 89.82, 83.85],
                 'AMZN': [133.68, 131.69, 128.21, 128.91, 139.57, 142.22, 139.94, 137.85]}
 
 # Combine the amount values with the closing data
@@ -99,6 +114,7 @@ CSVDataHandler.close_list_csv(closing_data)
 ```
 
 # Do something with the extracted data
+
 # For example, plot the closing prices over time:
 
 ```.py
@@ -116,7 +132,9 @@ candlestick_chart = dashboard.plot_candlestick_chart()
 ```
 
 # Do something with the analysis results
+
 # For example, display the candlestick chart:
+
 ```.py
 from pystocktopus.stock_forecasting import DataAnalysis
 
@@ -131,7 +149,9 @@ DataAnalysis.stock_analysis(csv_file)
 ```
 
 # Do something with the sentiment predictions
+
 # For example, identify the most positive and negative news articles:
+
 ```.py
 from pystocktopus.news_analysis import News
 
@@ -154,6 +174,7 @@ News.create_csv_with_predictions(csv_filename, analysis_results)
 ```
 
 # Display the most positive and negative news articles:
+
 ```.py
 import pystocktopus.news_analysis as news
 
@@ -168,6 +189,7 @@ news.News.create_csv_with_predictions(csv_filename,news_data)
 ```
 
 # Get the current closing price for Amazon
+
 ```.py
 # Import the StockExtractor class from the pystocktopus.core library.
 from pystocktopus.core import StockExtractor
@@ -186,7 +208,9 @@ print(Closing_price)
 ```
 
 # Do something with the current closing price
+
 # For example, print it to the console:
+
 ```.py
 print("Current closing price for Amazon:", Closing_price)
 ```
@@ -194,17 +218,21 @@ print("Current closing price for Amazon:", Closing_price)
 ### Install pystocktopus
 
 `pystocktopus` uses modern `Python` packaging and can be installed using `pip` -
+
 ```
 python -m pip install pystocktopus
 ```
+
 ### Setting-up API Key
-To use the software properly setup these *API keys* to completely use the features of the 
-project -
+
+To use the software properly setup these _API keys_ to completely use the
+features of the project -
 
 1. `Newsapi` access from [this](https://newsapi.org/).
 2. `Polygon.io` API access from [this](https://polygon.io/).
 
 #### Use this to Setup API Globally
+
 ```
 #Polyon API KEY
 export api_key="YOUR-API-KEY"

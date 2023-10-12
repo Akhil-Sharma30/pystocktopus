@@ -1,5 +1,5 @@
 site_name: pystocktopus
-theme: 
+theme:
   name: material
   features:
     - navigation.sections
@@ -7,14 +7,14 @@ theme:
   palette:
     - scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline 
+        icon: material/toggle-switch-off-outline
         name: Switch to dark mode
       primary: teal
-      accent: purple 
-    - scheme: slate 
+      accent: purple
+    - scheme: slate
       toggle:
         icon: material/toggle-switch
-        name: Switch to light mode    
+        name: Switch to light mode
       primary: teal
       accent: lime
   font:
@@ -23,9 +23,8 @@ theme:
     repo: fontawesome/brands/github
   # custom_dir: "docs/_overrides/"
 
-plugins: 
+plugins:
   - mkdocstrings
-
 
 site_description: Documentation for pystocktopus
 site_author: Akhil Sharma
@@ -64,16 +63,16 @@ markdown_extensions:
 nav:
   - Home: "index.md"
   - Installation: "Install.md"
-  - Implementation guide: 
-    - core.py: "core.md" 
-    - stock_csv.py: "stock_csv.md"
-    - news_analysis.py: "news_analysis.md"
-    - pattern_tool.py: "pattern_tool.md"
-    - stock_forecasting.py: "stock_forecasting.md"
+  - Implementation guide:
+      - core.py: "core.md"
+      - stock_csv.py: "stock_csv.md"
+      - news_analysis.py: "news_analysis.md"
+      - pattern_tool.py: "pattern_tool.md"
+      - stock_forecasting.py: "stock_forecasting.md"
   - Your support:
-    - Contributing: "Contribution.md"
-    - Changelog: "ChangeLog.md"
-    - Code of Conduct: "Conduct.md"
+      - Contributing: "Contribution.md"
+      - Changelog: "ChangeLog.md"
+      - Code of Conduct: "Conduct.md"
 
 copyright: |
   &copy; 2023 <a href="https://github.com/Akhil-Sharma30"  target="_blank" rel="noopener">Akhil Sharma</a>

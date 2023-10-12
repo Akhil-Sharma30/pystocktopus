@@ -1,25 +1,25 @@
 {
-    "pattern_name":"Ascending Triangle",
-    "sups":[
-       {
-          "id":0,
-          "slope_min":0,
-          "slope_max":null
-       }
-    ],
-    "ress":[
-       {
-          "id":0,
-          "slope_min":-0.1,
-          "slope_max":0.1
-       }
-    ],
-    "intercepts":[
-       {
-          "id":0,
-          "sup":0,
-          "res":0,
-          "periods_till_intercept":10
-       }
-    ]
- }
+  "pattern_name": "Ascending Triangle",
+  "sups": [
+    {
+      "id": 0,
+      "slope_min": 0,
+      "slope_max": null
+    }
+  ],
+  "ress": [
+    {
+      "id": 0,
+      "slope_min": -0.1,
+      "slope_max": 0.1
+    }
+  ],
+  "intercepts": [
+    {
+      "id": 0,
+      "sup": 0,
+      "res": 0,
+      "periods_till_intercept": 10
+    }
+  ]
+}

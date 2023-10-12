@@ -8,7 +8,7 @@ name = "pystocktopus"
 authors = [
   { name = "Akhil Sharma", email = "akhilsharma.off@gmail.com" },
 ]
-description = "help you maintain your stock dashboard also predict future for a stock based upon past data and also use the news sentiments of stocks volatality" 
+description = "help you maintain your stock dashboard also predict future for a stock based upon past data and also use the news sentiments of stocks volatality"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [

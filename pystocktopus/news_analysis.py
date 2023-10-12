@@ -1,15 +1,17 @@
-#Copyright (c) 2023 Akhil Sharma. All rights reserved.
+# Copyright (c) 2023 Akhil Sharma. All rights reserved.
+from __future__ import annotations
 
-from pystocktopus.config import news_api
-from typing import List,Dict
-from datetime import datetime, timedelta
-from newsapi import NewsApiClient
-from transformers import pipeline
-from pystocktopus.core import PastDays
+from datetime import datetime
+
 import pandas as pd
+from newsapi import NewsApiClient
+from pystocktopus.config import news_api
+from transformers import pipeline
+
 
 class News:
     """Class for handling news data."""
+
     @staticmethod
     def _combine_news_article(all_articles):
         """Combines the news articles for each ticker into a single string.
@@ -28,12 +30,12 @@ class News:
             for day, article in enumerate(articles["articles"], start=1):
                 title = article.get("title", "No Title Found")
                 result_string += f"Day{day}: {title}\n"
-            
+
             result_strings[ticker] = result_string
-            
+
         return result_strings
 
-    def new_data_extract(ticker_values,predict_date):
+    def new_data_extract(ticker_values, predict_date):
         """Extracts news articles for a given list of tickers and date range.
 
         Args:
@@ -51,28 +53,27 @@ class News:
         results_dict = {}
 
         # Define date range
-        start_date = datetime.strptime(predict_date, '%Y-%m-%d')
+        start_date = datetime.strptime(predict_date, "%Y-%m-%d")
 
         # Iterate through the ticker values and fetch articles for each
         for ticker in ticker_values:
             all_articles = newsapi.get_everything(
                 q=ticker,
-                sources='bbc-news,the-verge',
+                sources="bbc-news,the-verge",
                 from_param=start_date,
                 to=start_date,
-                language='en',
-                sort_by='relevancy'
+                language="en",
+                sort_by="relevancy",
             )
-            
+
             # Store the result in the dictionary
             results_dict[ticker] = all_articles
 
-        Data_found = News._combine_news_article(results_dict)
+        return News._combine_news_article(results_dict)
 
-        return Data_found
-    
+
     @staticmethod
-    def news_predict_analysis(Data: Dict[str,str]) -> Dict[str,str]:
+    def news_predict_analysis(Data: dict[str, str]) -> dict[str, str]:
         """Predicts the sentiment of the news articles for each ticker.
 
         Args:
@@ -83,25 +84,32 @@ class News:
         """
 
         # Initialize the text classification pipeline
-        pipe = pipeline("text-classification", model="distilbert-base-uncased-finetuned-sst-2-english")
+        pipe = pipeline(
+            "text-classification",
+            model="distilbert-base-uncased-finetuned-sst-2-english",
+        )
 
         # Initialize a dictionary to store the analysis results
-        analysis_results: Dict[str,str] = {}
+        analysis_results: dict[str, str] = {}
 
         # Iterate through the result_strings dictionary
         for ticker, content in Data.items():
             # Analyze the content for each ticker value using the pipeline
             data = pipe(content)
-            
+
             # Store the analysis results in the dictionary
             analysis_results[ticker] = {
                 "labels": [entry["label"] for entry in data],
             }
 
         return analysis_results
-    
+
     @staticmethod
-    def create_csv_with_predictions(csv_filename: str, analysis_results, column_name_for_prediction="news_prediction_for_stock"):
+    def create_csv_with_predictions(
+        csv_filename: str,
+        analysis_results,
+        column_name_for_prediction="news_prediction_for_stock",
+    ):
         """Creates a CSV file with the predicted sentiment for each ticker.
 
         Args:
@@ -116,8 +124,12 @@ class News:
             # Create a new DataFrame with the "Ticker" and "column_name_for_prediction" columns
             data = []
             for ticker, result in analysis_results.items():
-                prediction_label = result['labels'][0] if 'labels' in result else ''  # Assuming you want the first label as the prediction
-                data.append({'Ticker': ticker, column_name_for_prediction: prediction_label})
+                prediction_label = (
+                    result["labels"][0] if "labels" in result else ""
+                )  # Assuming you want the first label as the prediction
+                data.append(
+                    {"Ticker": ticker, column_name_for_prediction: prediction_label}
+                )
 
             # Convert the data to a DataFrame
             df = pd.DataFrame(data)
@@ -129,4 +141,4 @@ class News:
             print(f"New CSV file created at: {csv_filename}")
 
         except Exception as e:
-            print(f"An error occurred: {str(e)}")
+            print(f"An error occurred: {e!s}")

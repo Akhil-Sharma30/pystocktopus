@@ -1,21 +1,22 @@
-#Copyright (c) 2023 Akhil Sharma. All rights reserved.
+# Copyright (c) 2023 Akhil Sharma. All rights reserved.
+from __future__ import annotations
 
+import mplfinance as fplt
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
-import tensorflow as tf
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
-from typing import cast,List,TypeVar,Tuple,Any
-import pandas as pd
-import mplfinance as fplt
 import plotly.graph_objects as go
+import tensorflow as tf
 from plotly.subplots import make_subplots
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.layers import LSTM, Dense
+from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
+
 class ModelStockData:
-    def _csvDataCollection(csv_file: str,sequence_length,stock_closing_price_column_name: str):
+    def _csvDataCollection(
+        csv_file: str, sequence_length, stock_closing_price_column_name: str
+    ):
         """Collects and prepares data from a CSV file for training a sequential model.
 
         Args:
@@ -37,7 +38,7 @@ class ModelStockData:
         data = scaler.fit_transform(data)
 
         # Split the data into training and testing sets
-        train_size = int(len(data) * 0.8)   
+        train_size = int(len(data) * 0.8)
         train_data = data[:train_size]
         test_data = data[train_size:]
 
@@ -45,8 +46,8 @@ class ModelStockData:
         def create_sequences(data, seq_length):
             sequences = []
             for i in range(len(data) - seq_length):
-                X = data[i:i+seq_length]
-                y = data[i+seq_length]
+                X = data[i : i + seq_length]
+                y = data[i + seq_length]
                 sequences.append((X, y))
             return np.array(sequences)
 
@@ -67,7 +68,13 @@ class ModelStockData:
         X_tensorflow_test = tf.convert_to_tensor(X_test, dtype=tf.float32)
         y_tensorflow_test = tf.convert_to_tensor(y_test, dtype=tf.float32)
 
-        return X_tensorflow_train, y_tensorflow_train, X_tensorflow_test, y_tensorflow_test, scaler
+        return (
+            X_tensorflow_train,
+            y_tensorflow_train,
+            X_tensorflow_test,
+            y_tensorflow_test,
+            scaler,
+        )
 
     def _mean_absolute_percentage_error(y_true, y_pred):
         """Calculates the mean absolute percentage error (MAPE) between two arrays.
@@ -81,13 +88,16 @@ class ModelStockData:
         """
         return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
 
-    def create_and_fit_lstm_model(csv_file:str,
-                                  sequence_length:int=10,
-                                  layers:int=10,
-                                  lstm_units:list = [16],
-                                  epochs = 50, lr:float = 0.0008, 
-                                  stacked:bool = False,
-                                  stock_closing_price_column_name:str='closing_stock_data_SONY')-> None:
+    def create_and_fit_lstm_model(
+        csv_file: str,
+        sequence_length: int = 10,
+        layers: int = 10,
+        lstm_units: list | None = None,
+        epochs=50,
+        lr: float = 0.0008,
+        stacked: bool = False,
+        stock_closing_price_column_name: str = "closing_stock_data_SONY",
+    ) -> None:
         """Creates and fits a long short-term memory (LSTM) model to predict stock prices, and returns the predicted value with the lowest MAPE.
 
         Args:
@@ -105,21 +115,30 @@ class ModelStockData:
             float: The predicted stock price with the lowest MAPE.
         """
         # setting the from the user csv file
-        X_tensorflow_train, y_tensorflow_train, X_tensorflow_test, y_tensorflow_test, scaler = ModelStockData._csvDataCollection(csv_file, sequence_length,stock_closing_price_column_name)
+        if lstm_units is None:
+            lstm_units = [16]
+        (
+            X_tensorflow_train,
+            y_tensorflow_train,
+            X_tensorflow_test,
+            y_tensorflow_test,
+            scaler,
+        ) = ModelStockData._csvDataCollection(
+            csv_file, sequence_length, stock_closing_price_column_name
+        )
 
         input_shape = (X_tensorflow_train.shape[1], X_tensorflow_train.shape[2])
         if stacked is False:
             model = Sequential()
-            model.add(LSTM(layers, activation='relu', input_shape=input_shape))
+            model.add(LSTM(layers, activation="relu", input_shape=input_shape))
             model.add(Dense(1))
         else:
-            model = Sequential() 
-            model.add(LSTM(1, activation='relu', input_shape=input_shape))
+            model = Sequential()
+            model.add(LSTM(1, activation="relu", input_shape=input_shape))
             model.add(Dense(1))
 
-
         custom_optimizer = Adam(learning_rate=lr)
-        model.compile(optimizer=custom_optimizer, loss='mean_squared_error')
+        model.compile(optimizer=custom_optimizer, loss="mean_squared_error")
         model.fit(X_tensorflow_train, y_tensorflow_train, epochs=epochs)
         predicted_prices = model.predict(X_tensorflow_test)
 
@@ -129,7 +148,9 @@ class ModelStockData:
 
         # Calculate MAPE for each prediction and store it in mape_values
         for i in range(len(y_tensorflow_test)):
-            mape = ModelStockData._mean_absolute_percentage_error(y_tensorflow_test[i], predicted_prices[i])
+            mape = ModelStockData._mean_absolute_percentage_error(
+                y_tensorflow_test[i], predicted_prices[i]
+            )
             mape_values.append(mape)
 
         # Find the index of the prediction with the lowest MAPE
@@ -139,12 +160,14 @@ class ModelStockData:
         predicted_value = predicted_prices[min_mape_index][0]
         print(predicted_value)
 
+
 class DataAnalysis:
     """Class for performing data analysis on stock data."""
+
     @staticmethod
     def stock_analysis(
-                        csv_file:str,
-                        stock_closing_price_column_name:str='closing_stock_data_SONY')-> None:
+        csv_file: str, stock_closing_price_column_name: str = "closing_stock_data_SONY"
+    ) -> None:
         """Performs a basic analysis of a stock price dataset.
 
         Args:
@@ -156,13 +179,20 @@ class DataAnalysis:
             None
         """
         data = pd.read_csv(csv_file, index_col=0, parse_dates=True)
-        fplt.plot(data,type='candle',title='Google',ylabel='Price ($)')
+        fplt.plot(data, type="candle", title="Google", ylabel="Price ($)")
 
-        fig = go.Figure(data=go.Scatter(x=data.index,y=data[stock_closing_price_column_name], mode='lines+markers'))
+        fig = go.Figure(
+            data=go.Scatter(
+                x=data.index,
+                y=data[stock_closing_price_column_name],
+                mode="lines+markers",
+            )
+        )
         fig.show()
 
-    def interactive_sticks(csv_file:str,
-                           stock_closing_price_column_name:str='closing_stock_data_SONY'):
+    def interactive_sticks(
+        csv_file: str, stock_closing_price_column_name: str = "closing_stock_data_SONY"
+    ):
         """Creates an interactive candlestick chart of a stock price dataset.
 
         Args:
@@ -175,14 +205,19 @@ class DataAnalysis:
         """
         data = pd.read_csv(csv_file, index_col=0, parse_dates=True)
         fig3 = make_subplots(specs=[[{"secondary_y": True}]])
-        fig3.add_trace(go.Candlestick(x=data.index,
-                              close=data[stock_closing_price_column_name],
-                             ))
-    
-    def interactive_bar(csv_file: str,
-                        stock_closing_price_column_name: str='closing_stock_data_SONY',
-                        volume_column_name: str='Volume',
-                        title_name: str = 'data'):
+        fig3.add_trace(
+            go.Candlestick(
+                x=data.index,
+                close=data[stock_closing_price_column_name],
+            )
+        )
+
+    def interactive_bar(
+        csv_file: str,
+        stock_closing_price_column_name: str = "closing_stock_data_SONY",
+        volume_column_name: str = "Volume",
+        title_name: str = "data",
+    ):
         """Creates an interactive bar chart of a stock price dataset with volume and 20-day moving average.
 
         Args:
@@ -198,13 +233,26 @@ class DataAnalysis:
         """
         data = pd.read_csv(csv_file, index_col=0, parse_dates=True)
         fig3 = make_subplots(specs=[[{"secondary_y": True}]])
-        fig3.add_trace(go.Bar(x=data.index, y=data[volume_column_name], name=volume_column_name),secondary_y=True)
+        fig3.add_trace(
+            go.Bar(x=data.index, y=data[volume_column_name], name=volume_column_name),
+            secondary_y=True,
+        )
         fig3.update_layout(xaxis_rangeslider_visible=False)
         fig3.show()
-        fig3.add_trace(go.Scatter(x=data.index,y=data[stock_closing_price_column_name].rolling(window=21).mean(),marker_color='blue',name='20 Day MA'))
-        fig3.add_trace(go.Bar(x=data.index, y=data[volume_column_name], name=volume_column_name),secondary_y=True)
-        fig3.update_layout(title={'text':title_name, 'x':0.5})
-        fig3.update_yaxes(range=[0,70000000],secondary_y=True)
+        fig3.add_trace(
+            go.Scatter(
+                x=data.index,
+                y=data[stock_closing_price_column_name].rolling(window=21).mean(),
+                marker_color="blue",
+                name="20 Day MA",
+            )
+        )
+        fig3.add_trace(
+            go.Bar(x=data.index, y=data[volume_column_name], name=volume_column_name),
+            secondary_y=True,
+        )
+        fig3.update_layout(title={"text": title_name, "x": 0.5})
+        fig3.update_yaxes(range=[0, 70000000], secondary_y=True)
         fig3.update_yaxes(visible=False, secondary_y=True)
-        fig3.update_layout(xaxis_rangeslider_visible=False)  #hide range slider
+        fig3.update_layout(xaxis_rangeslider_visible=False)  # hide range slider
         fig3.show()
