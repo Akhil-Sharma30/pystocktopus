@@ -71,7 +71,6 @@ class News:
 
         return News._combine_news_article(results_dict)
 
-
     @staticmethod
     def news_predict_analysis(Data: dict[str, str]) -> dict[str, str]:
         """Predicts the sentiment of the news articles for each ticker.
@@ -132,13 +131,13 @@ class News:
                 )
 
             # Convert the data to a DataFrame
-            df = pd.DataFrame(data)
+            dataframe = pd.DataFrame(data)
 
             # Save the new DataFrame to the new CSV file
-            df.to_csv(csv_filename, index=False)
+            dataframe.to_csv(csv_filename, index=False)
 
             # Print a message with the location of the saved CSV file
-            print(f"New CSV file created at: {csv_filename}")
+            raise f"New CSV file created at: {csv_filename}"
 
         except Exception as e:
-            print(f"An error occurred: {e!s}")
+            raise e
