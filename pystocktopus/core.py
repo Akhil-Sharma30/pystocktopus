@@ -1,7 +1,6 @@
 # Copyright (c) 2023 Akhil Sharma. All rights reserved.
 from __future__ import annotations
 
-import datetime
 import json
 from datetime import datetime
 
@@ -86,4 +85,4 @@ class PastDays:
             return start_date.strftime("%Y-%m-%d")
 
         except Exception as e:
-            print(f"An error occurred: {e!s}")
+            raise e

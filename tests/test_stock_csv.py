@@ -46,8 +46,8 @@ def test_combine_data_csv():
 
 def test_update_csv():
     CSVDataHandler.update_csv(user_csv_file, result)
-    df = pd.read_csv(user_csv_file)
-    assert "Price Calculated" in df.columns
+    dataframe = pd.read_csv(user_csv_file)
+    assert "Price Calculated" in dataframe.columns
 
 
 CSVDataHandler.close_list_csv(closing_data)

@@ -30,8 +30,8 @@ class ModelStockData:
                 representing the training input sequences (X), training target values (y), test input
                 sequences (X_test), and test target values (y_test).
         """
-        df = pd.read_csv(csv_file)
-        data = df[stock_closing_price_column_name].values.reshape(-1, 1)
+        dataframe = pd.read_csv(csv_file)
+        data = dataframe[stock_closing_price_column_name].values.reshape(-1, 1)
 
         # Scale the data to be between 0 and 1
         scaler = MinMaxScaler()
@@ -157,8 +157,8 @@ class ModelStockData:
         min_mape_index = np.argmin(mape_values)
 
         # Get the corresponding predicted value
-        predicted_value = predicted_prices[min_mape_index][0]
-        print(predicted_value)
+        return predicted_prices[min_mape_index][0]
+        # print(predicted_value)
 
 
 class DataAnalysis:

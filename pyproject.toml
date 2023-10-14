@@ -5,6 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pystocktopus"
+version = "0.1"
 authors = [
   { name = "Akhil Sharma", email = "akhilsharma.off@gmail.com" },
 ]
@@ -28,7 +29,7 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Typing :: Typed",
 ]
-dynamic = ["version"]
+
 dependencies = [
   "polygon-api-client",
   "scikit-learn",
@@ -69,8 +70,6 @@ Changelog = "https://github.com/Akhil-Sharma30/pystocktopus/releases"
 
 
 [tool.hatch]
-version.source = "vcs"
-build.hooks.vcs.version-file = "pystocktopus/src/_version.py"
 envs.default.dependencies = [
   "pytest",
   "pytest-cov",
