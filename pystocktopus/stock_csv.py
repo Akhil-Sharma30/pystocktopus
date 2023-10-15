@@ -41,7 +41,7 @@ class CSVDataHandler:
                 # Check if the column was found
                 if data_column_index == -1:
                     raise f"No {csv_stock_column_name} column found."
-                
+
                 # Read the data from the specified column
                 for row in csv_reader:
                     if data_column_index < len(row):

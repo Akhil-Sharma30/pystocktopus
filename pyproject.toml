@@ -64,6 +64,7 @@ docs = [
 
 [project.urls]
 Homepage = "https://github.com/Akhil-Sharma30/pystocktopus"
+Documentation = "https://pystocktopus.readthedocs.io/en/latest/"
 "Bug Tracker" = "https://github.com/Akhil-Sharma30/pystocktopus/issues"
 Discussions = "https://github.com/Akhil-Sharma30/pystocktopus/discussions"
 Changelog = "https://github.com/Akhil-Sharma30/pystocktopus/releases"

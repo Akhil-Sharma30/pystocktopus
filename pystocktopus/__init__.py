@@ -6,4 +6,3 @@ pystocktopus: help you maintain your stock dashboard and also predict future for
 
 
 from __future__ import annotations
-
