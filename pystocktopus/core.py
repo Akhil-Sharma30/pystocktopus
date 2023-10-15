@@ -1,8 +1,8 @@
 # Copyright (c) 2023 Akhil Sharma. All rights reserved.
 from __future__ import annotations
 
-import json
 import datetime
+import json
 
 from polygon import RESTClient
 
@@ -77,7 +77,7 @@ class PastDays:
         """
         try:
             # Convert the start_date string to a datetime object
-            end_date = datetime.datetime.strptime(start_date_str, "%Y-%m-%d")
+            end_date = datetime.strptime(start_date_str, "%Y-%m-%d")
 
             # Calculate the end_date by subtracting 20 days from start_date
             start_date = end_date - datetime.timedelta(days=days_lag)
