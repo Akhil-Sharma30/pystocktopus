@@ -10,6 +10,7 @@ csv_file = "stock_data-2.csv"
 ModelStockData.create_and_fit_lstm_model(
     csv_file, sequence_length=10, epochs=50, stacked=False
 )
+print(ModelStockData)
 
 # # Create an interactive bar chart of the stock price data with volume and 20-day moving average
 # DataAnalysis.interactive_bar(csv_file)

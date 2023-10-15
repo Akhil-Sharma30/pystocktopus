@@ -40,22 +40,17 @@ class CSVDataHandler:
 
                 # Check if the column was found
                 if data_column_index == -1:
-                    print(f"No {csv_stock_column_name} column found.")
-                else:
-                    # Read the data from the specified column
-                    for row in csv_reader:
-                        if data_column_index < len(row):
-                            data_values.append(row[data_column_index])
-
-                    # Print the selected column values
-                    print(f"Values in the {csv_stock_column_name} column:")
-                    for value in data_values:
-                        print(value)
+                    raise f"No {csv_stock_column_name} column found."
+                
+                # Read the data from the specified column
+                for row in csv_reader:
+                    if data_column_index < len(row):
+                        data_values.append(row[data_column_index])
 
         except FileNotFoundError:
-            print(f"File '{csv_file}' not found.")
+            raise FileNotFoundError
         except Exception as e:
-            print(f"An error occurred: {e!s}")
+            raise e
 
         return data_values
 
@@ -122,9 +117,9 @@ class CSVDataHandler:
             )
 
         except FileNotFoundError:
-            print(f"File '{csv_path}' not found. Could you specify the file?")
+            raise FileNotFoundError
         except Exception as e:
-            print(f"An error occurred: {e!s}")
+            raise e
 
     # Store the Closing_List Stock Result in the .CSV file
     @staticmethod
@@ -178,4 +173,4 @@ class CSVDataHandler:
                 )
 
         except Exception as e:
-            print(f"An error occurred: {e!s}")
+            raise e

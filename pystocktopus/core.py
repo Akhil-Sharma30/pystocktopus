@@ -4,8 +4,9 @@ from __future__ import annotations
 import json
 from datetime import datetime
 
-import pystocktopus.config as config
 from polygon import RESTClient
+
+import pystocktopus.config as config
 
 
 class StockExtractor:

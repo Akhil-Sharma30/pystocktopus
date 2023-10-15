@@ -133,6 +133,24 @@ candlestick_chart = dashboard.plot_candlestick_chart()
 
 # Do something with the analysis results
 
+# For example, want to predict some data using past Closing price
+
+```.py
+# Import the necessary modules
+from __future__ import annotations
+
+from pystocktopus.stock_forecasting import ModelStockData
+
+# Specify the path to the CSV file containing the stock data
+csv_file = "stock_data-2.csv"
+
+# Create and fit an LSTM model to the stock data
+ModelStockData.create_and_fit_lstm_model(
+    csv_file, sequence_length=10, epochs=50, stacked=False
+)
+print(ModelStockData)
+```
+
 # For example, display the candlestick chart:
 
 ```.py
