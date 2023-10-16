@@ -5,7 +5,7 @@ from pystocktopus.core import StockExtractor
 
 # Set the ticker values, timespan, multiplier, and user date.
 ticker_values = ["AMZN"]
-timespan = "DAY"
+timespan = "day"
 multiplier = 1
 user_date = "2023-09-20"
 

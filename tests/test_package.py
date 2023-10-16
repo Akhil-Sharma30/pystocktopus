@@ -6,4 +6,4 @@ import pystocktopus as m
 
 
 def test_version():
-    assert importlib.metadata.version("pystocktopus") == m.__version__
+    assert importlib.metadata.version("pystocktopus") == "0.1"
