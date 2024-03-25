@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import datetime
 import json
+
 from polygon import RESTClient
 
 import pystocktopus.config as config
