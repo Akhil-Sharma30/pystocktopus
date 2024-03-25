@@ -3,6 +3,7 @@ Copyright (c) 2023 Akhil Sharma. All rights reserved.
 
 pystocktopus.
 """
+
 from __future__ import annotations
 
 import os
