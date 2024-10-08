@@ -5,8 +5,9 @@ from datetime import datetime
 
 import pandas as pd
 from newsapi import NewsApiClient
-from pystocktopus.config import news_api
 from transformers import pipeline
+
+from pystocktopus.config import news_api
 
 
 class News:
