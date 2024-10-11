@@ -126,6 +126,7 @@ class CSVDataHandler:
     def close_list_csv(
         ticker_data: dict[str, list[float]],
         closing_data_fieldname: list[str] | None = None,
+        csv_file_name = "stock_data.csv"
     ) -> None:
         """Stores the closing list stock results in a CSV file.
 
@@ -143,7 +144,6 @@ class CSVDataHandler:
             return  # Return early if ticker_data is empty
 
         # Create a CSV file with ticker names as columns
-        csv_file_name = "stock_data.csv"
 
         try:
             with open(csv_file_name, "w", newline="") as csvfile:
