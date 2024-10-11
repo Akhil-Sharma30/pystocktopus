@@ -3,7 +3,9 @@ from __future__ import annotations
 
 import datetime
 import json
+import os
 from polygon import RESTClient
+from dotenv import load_dotenv
 
 import pystocktopus.config as config
 
@@ -12,7 +14,7 @@ class StockExtractor:
     """Extracts stock data from Polygon.io."""
 
     def ticker_data_collection(
-        ticker_values: list[str], timespan: str, multiplier: int, user_date: str
+        ticker_values: list[str], timespan: str, multiplier: int, user_date: str, days = 500
     ) -> list[float]:
         """Extracts stock data closing price from Polygon.io.
 
@@ -23,12 +25,13 @@ class StockExtractor:
             multiplier (int): The multiplier to apply to the time span. For example, a multiplier
                 of 2 will collect data for twice the specified time span.
             user_date (str): The date up to which to collect data.
+            days (int): The number of days to be data retrieved for.
 
         Returns:
             List[float]: A list of closing prices for the specified stocks.
         """
 
-        start_date = PastDays.CalculateDate(user_date, 90)
+        start_date = PastDays.CalculateDate(user_date, days)
 
         # Initialize the dictionary to store data
         ticker_data = {}
@@ -36,7 +39,8 @@ class StockExtractor:
         # try:
         #     if config.api_key is not None:
         # API Declarations
-        client: str = RESTClient(api_key=config.api_key)
+        load_dotenv()
+        client: str = RESTClient(api_key=os.getenv("POLYGON_API"))
         # except:
         #     print(f"'{config.api_key}' not found. Could you specify in the pystocktopus.config?")
         #     return
