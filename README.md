@@ -8,7 +8,11 @@
 ![GitHub Discussions](https://img.shields.io/github/discussions/Akhil-Sharma30/pystocktopus)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pystocktopus)
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/Akhil-Sharma30/pystocktopus/CI) -->
-
+[pypi-version]: https://img.shields.io/pypi/v/pystocktopus
+[pypi-platforms]: https://img.shields.io/pypi/pyversions/pystocktopus
+[pypi-link]: https://pypi.org/project/pystocktopus/
+[actions-badge]: https://img.shields.io/github/actions/workflow/status/Akhil-Sharma30/pystocktopus/main.yml
+[actions-link]: https://github.com/Akhil-Sharma30/pystocktopus/actions
 [![Actions Status][actions-badge]][actions-link]  
 [![Documentation Status](https://readthedocs.org/projects/pystocktopus/badge/?version=latest)](https://pystocktopus.readthedocs.io/en/latest/?badge=latest)  
 ![GitHub issues](https://img.shields.io/github/issues/Akhil-Sharma30/pystocktopus)  
