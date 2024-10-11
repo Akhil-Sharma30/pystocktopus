@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "pystocktopus"
-version = "0.1.2"
+version = "0.1.4"
 authors = [
   { name = "Akhil Sharma", email = "akhilsharma.off@gmail.com" },
 ]
