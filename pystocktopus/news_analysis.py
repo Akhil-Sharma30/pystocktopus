@@ -1,16 +1,47 @@
 # Copyright (c) 2023 Akhil Sharma. All rights reserved.
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
+import logging
+import os
+from typing import List
+from dotenv import load_dotenv
 
 import pandas as pd
 from newsapi import NewsApiClient
 from pystocktopus.config import news_api
 from transformers import pipeline
 
+logging.basicConfig(
+    filename="stock_model.log",  # Log file name
+    filemode="a",  # Append to the log file
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    level=logging.INFO,  # Log level
+)
 
 class News:
     """Class for handling news data."""
+
+    def _recursive_character_splitter(
+        self, text: str, context_window: int
+    ) -> List[str]:
+
+        if len(text) <= context_window:
+            return [text]
+
+        point = text.rfind("\n\n", 0, end=context_window)
+        if point == -1:
+            point = text.rfind("\n", 0, context_window)
+        if point == -1:
+            point = text.rfind(" ", 0, context_window)
+        if point == -1:
+            point = context_window
+
+        p1 = text[:point].strip()
+        p2 = text[point:].strip()
+        return [p1] + self._recursive_character_splitter(
+            p2, context_window=context_window
+        )
 
     @staticmethod
     def _combine_news_article(all_articles):
@@ -35,7 +66,8 @@ class News:
 
         return result_strings
 
-    def new_data_extract(ticker_values, predict_date):
+    @staticmethod
+    def new_data_extract(ticker_values, predict_date, days:int = 10):
         """Extracts news articles for a given list of tickers and date range.
 
         Args:
@@ -45,15 +77,16 @@ class News:
         Returns:
             Dict[str, str]: A dictionary of news articles for each ticker.
         """
-
+        load_dotenv()
         # Initialize the News API client (you may need to install the newsapi-python package)
-        newsapi = NewsApiClient(api_key=news_api)
+        newsapi = NewsApiClient(api_key=os.getenv("NEWS_API"))
 
         # Initialize a dictionary to store the results
         results_dict = {}
 
         # Define date range
         start_date = datetime.strptime(predict_date, "%Y-%m-%d")
+        end_date = start_date - timedelta(days=days)
 
         # Iterate through the ticker values and fetch articles for each
         for ticker in ticker_values:
@@ -61,7 +94,7 @@ class News:
                 q=ticker,
                 sources="bbc-news,the-verge",
                 from_param=start_date,
-                to=start_date,
+                to=end_date,
                 language="en",
                 sort_by="relevancy",
             )
@@ -94,12 +127,18 @@ class News:
         # Iterate through the result_strings dictionary
         for ticker, content in Data.items():
             # Analyze the content for each ticker value using the pipeline
-            data = pipe(content)
+            data = content.split("\n")
+            postive = 0
+            negative = 0
+            for d in data:
+                sentiment = pipe(d)[0]
+                if sentiment["label"] == "NEGATIVE":
+                    negative += 1
+                else:
+                    postive += 1
 
             # Store the analysis results in the dictionary
-            analysis_results[ticker] = {
-                "labels": [entry["label"] for entry in data],
-            }
+            analysis_results[ticker] = "NEGATIVE" if negative >= postive else "POSITIVE"
 
         return analysis_results
 
@@ -137,7 +176,7 @@ class News:
             dataframe.to_csv(csv_filename, index=False)
 
             # Print a message with the location of the saved CSV file
-            raise f"New CSV file created at: {csv_filename}"
+            logging.info(f"New CSV file created at: {csv_filename}")
 
         except Exception as e:
             raise e
