@@ -1,5 +1,6 @@
 # Copyright (c) 2023 Akhil Sharma. All rights reserved.
 from __future__ import annotations
+import logging  # Import the logging module
 
 import mplfinance as fplt
 import numpy as np
@@ -10,156 +11,171 @@ from plotly.subplots import make_subplots
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import Adamax
+
+# Configure logging
+logging.basicConfig(
+    filename="stock_model.log",  # Log file name
+    filemode="a",  # Append to the log file
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    level=logging.INFO,  # Log level
+)
 
 
 class ModelStockData:
     def _csvDataCollection(
         csv_file: str, sequence_length, stock_closing_price_column_name: str
     ):
-        """Collects and prepares data from a CSV file for training a sequential model.
+        """Collects and prepares data from a CSV file for training a sequential model."""
+        logging.info("Starting CSV data collection from %s.", csv_file)
 
-        Args:
-            csv_file (str): The path to the CSV file containing the data.
-            sequence_length (int): The length of the sequences to create from the data.
-            stock_closing_price_column_name (str): The name of the column in the CSV file containing
-                the stock closing price data.
+        try:
+            dataframe = pd.read_csv(csv_file)
+            data = dataframe[stock_closing_price_column_name].values.reshape(-1, 1)
 
-        Returns:
-            tuple[tf.Tensor, tf.Tensor, tf.Tensor, tf.Tensor]: A tuple of four TensorFlow tensors,
-                representing the training input sequences (X), training target values (y), test input
-                sequences (X_test), and test target values (y_test).
-        """
-        dataframe = pd.read_csv(csv_file)
-        data = dataframe[stock_closing_price_column_name].values.reshape(-1, 1)
+            # Scale the data to be between 0 and 1
+            scaler = MinMaxScaler()
+            data = scaler.fit_transform(data)
+            print(data.shape)
+            # Split the data into training and testing sets
+            # train_size = int(len(data) * 0.8)
+            # train_data = data[:train_size]
+            # print(f'train data ={train_data}')
+            # test_data = data[train_size:]
+            # print(f'test data ={test_data}')
+            # logging.info("Data split into training and test sets successfully.")
 
-        # Scale the data to be between 0 and 1
-        scaler = MinMaxScaler()
-        data = scaler.fit_transform(data)
+            # Create sequences of data for training
+            def create_sequences(data, seq_length):
+                sequences = []
+                for i in range(len(data) - seq_length):
+                    x = data[i : i + seq_length]
+                    y = data[i + seq_length]
+                    print("################")
+                    print(len(x), len(y))
+                    sequences.append((x, y))
 
-        # Split the data into training and testing sets
-        train_size = int(len(data) * 0.8)
-        train_data = data[:train_size]
-        test_data = data[train_size:]
+                print(len(sequences))
+                return np.array(sequences)
 
-        # Create sequences of data for training
-        def create_sequences(data, seq_length):
-            sequences = []
-            for i in range(len(data) - seq_length):
-                X = data[i : i + seq_length]
-                y = data[i + seq_length]
-                sequences.append((X, y))
-            return np.array(sequences)
+            # seq_length = sequence_length
+            # train_sequences = create_sequences(train_data, seq_length)
+            # test_sequences = create_sequences(test_data, seq_length)
 
-        seq_length = sequence_length
-        train_sequences = create_sequences(train_data, seq_length)
-        test_sequences = create_sequences(test_data, seq_length)
+            # Separate input sequences (X) and target values (y)
+            # X_train = np.stack(data[:, 0])  # Stack input sequences
+            # y_train = np.stack(data[:, 1])  # Stack target sequences
 
-        # Separate input sequences (X) and target values (y)
-        X_train = np.stack(train_sequences[:, 0])  # Stack input sequences
-        y_train = np.stack(train_sequences[:, 1])  # Stack target sequences
+            # X_test = np.stack(data[:, 0])  # Stack input sequences
+            # y_test = np.stack(data[:, 1])  # Stack target sequences
 
-        X_test = np.stack(test_sequences[:, 0])  # Stack input sequences
-        y_test = np.stack(test_sequences[:, 1])  # Stack target sequences
+            # Convert NumPy arrays to TensorFlow tensors
+            X_tensorflow_train = tf.convert_to_tensor(data, dtype=tf.float32)
+            y_tensorflow_train = tf.convert_to_tensor(data, dtype=tf.float32)
 
-        # Convert NumPy arrays to TensorFlow tensors
-        X_tensorflow_train = tf.convert_to_tensor(X_train, dtype=tf.float32)
-        y_tensorflow_train = tf.convert_to_tensor(y_train, dtype=tf.float32)
-        X_tensorflow_test = tf.convert_to_tensor(X_test, dtype=tf.float32)
-        y_tensorflow_test = tf.convert_to_tensor(y_test, dtype=tf.float32)
+            logging.info("Data collection completed successfully.")
 
-        return (
-            X_tensorflow_train,
-            y_tensorflow_train,
-            X_tensorflow_test,
-            y_tensorflow_test,
-            scaler,
-        )
+            return (
+                X_tensorflow_train,
+                y_tensorflow_train,
+                scaler,
+            )
+
+        except Exception as e:
+            logging.error("Error during CSV data collection: %s", str(e))
+            raise
 
     def _mean_absolute_percentage_error(y_true, y_pred):
-        """Calculates the mean absolute percentage error (MAPE) between two arrays.
+        """Calculates the mean absolute percentage error (MAPE) between two arrays."""
+        try:
+            mape = np.mean(np.abs((y_true - y_pred) / y_true)) * 100
+            logging.info("MAPE calculated successfully.")
+            return mape
+        except Exception as e:
+            logging.error("Error in calculating MAPE: %s", str(e))
+            raise
 
-        Args:
-            y_true (np.ndarray): The true values.
-            y_pred (np.ndarray): The predicted values.
-
-        Returns:
-            float: The MAPE.
-        """
-        return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
-
+    @staticmethod
     def create_and_fit_lstm_model(
         csv_file: str,
         sequence_length: int = 10,
         layers: int = 10,
         lstm_units: list | None = None,
-        epochs=50,
+        epochs=650,
         lr: float = 0.0008,
-        stacked: bool = False,
-        stock_closing_price_column_name: str = "closing_stock_data_SONY",
+        stacked: bool = True,
+        progress_callback=None,  # progress_callback will be a callable
+        stock_closing_price_column_name: str = "closing_stock_data_GOOGL",
     ) -> None:
-        """Creates and fits a long short-term memory (LSTM) model to predict stock prices, and returns the predicted value with the lowest MAPE.
 
-        Args:
-            csv_file (str): The path to the CSV file containing the stock price data.
-            sequence_length (int): The length of the sequences to create from the data.
-            layers (int): The number of LSTM layers in the model.
-            lstm_units (list): A list of the number of units in each LSTM layer.
-            epochs (int): The number of epochs to train the model for.
-            lr (float): The learning rate to use during training.
-            stacked (bool): Whether to use a stacked LSTM model or Single Layer LSTM.
-            stock_closing_price_column_name (str): The name of the column in the CSV file containing
-                the stock closing price data.
 
-        Returns:
-            float: The predicted stock price with the lowest MAPE.
-        """
-        # setting the from the user csv file
+        logging.info("Creating and fitting LSTM model with %d epochs.", epochs)
+
         if lstm_units is None:
             lstm_units = [16]
-        (
-            X_tensorflow_train,
-            y_tensorflow_train,
-            X_tensorflow_test,
-            y_tensorflow_test,
-            scaler,
-        ) = ModelStockData._csvDataCollection(
-            csv_file, sequence_length, stock_closing_price_column_name
-        )
 
-        input_shape = (X_tensorflow_train.shape[1], X_tensorflow_train.shape[2])
-        if stacked is False:
-            model = Sequential()
-            model.add(LSTM(layers, activation="relu", input_shape=input_shape))
-            model.add(Dense(1))
-        else:
-            model = Sequential()
-            model.add(LSTM(1, activation="relu", input_shape=input_shape))
-            model.add(Dense(1))
-
-        custom_optimizer = Adam(learning_rate=lr)
-        model.compile(optimizer=custom_optimizer, loss="mean_squared_error")
-        model.fit(X_tensorflow_train, y_tensorflow_train, epochs=epochs)
-        predicted_prices = model.predict(X_tensorflow_test)
-
-        # Inverse transform the scaled data to get the actual stock prices
-        predicted_prices = scaler.inverse_transform(predicted_prices)
-        mape_values = []
-
-        # Calculate MAPE for each prediction and store it in mape_values
-        for i in range(len(y_tensorflow_test)):
-            mape = ModelStockData._mean_absolute_percentage_error(
-                y_tensorflow_test[i], predicted_prices[i]
+        try:
+            (
+                X_tensorflow_train,
+                y_tensorflow_train,
+                scaler,
+            ) = ModelStockData._csvDataCollection(
+                csv_file, sequence_length, stock_closing_price_column_name
             )
-            mape_values.append(mape)
 
-        # Find the index of the prediction with the lowest MAPE
-        min_mape_index = np.argmin(mape_values)
+            input_shape = (1, 1)
+            if stacked is False:
+                model = Sequential()
+                model.add(LSTM(layers, activation="relu", input_shape=input_shape))
+                model.add(Dense(1))
+            else:
+                model = Sequential()
+                model.add(LSTM(1, activation="relu", input_shape=input_shape))
+                model.add(Dense(1))
 
-        # Get the corresponding predicted value
-        return predicted_prices[min_mape_index][0]
-        # print(predicted_value)
+            custom_optimizer = Adamax(
+                learning_rate=lr, weight_decay=0.001, epsilon=1e-08
+            )
+            model.compile(optimizer=custom_optimizer, loss="mean_squared_error")
 
+            # Define a custom callback class to monitor progress
+            class ProgressCallback(tf.keras.callbacks.Callback):
+                def on_epoch_end(self, epoch, logs=None):
+                    # Call the progress_callback function if provided
+                    if progress_callback:
+                        loss = logs.get('loss')  # Get the loss for the current epoch
+                        progress_callback(epoch + 1, loss)  # Update progress
+
+            # Pass the ProgressCallback instance to model.fit
+            model.fit(
+                X_tensorflow_train, 
+                y_tensorflow_train, 
+                epochs=epochs, 
+                callbacks=[ProgressCallback()]
+            )
+
+            logging.info("Model fitting completed successfully.")
+
+            predicted_prices = model.predict(X_tensorflow_train)
+
+            # Inverse transform the scaled data to get the actual stock prices
+            predicted_prices = scaler.inverse_transform(predicted_prices)
+            mape_values = []
+
+            for i in range(len(X_tensorflow_train)):
+                mape = ModelStockData._mean_absolute_percentage_error(
+                    y_tensorflow_train[i], predicted_prices[i]
+                )
+                mape_values.append(mape)
+
+            min_mape_index = np.argmin(mape_values)
+            logging.info("Lowest MAPE achieved at index %d.", min_mape_index)
+
+            return predicted_prices[min_mape_index][0]
+
+        except Exception as e:
+            logging.error("Error in creating and fitting LSTM model: %s", str(e))
+            raise
 
 class DataAnalysis:
     """Class for performing data analysis on stock data."""
