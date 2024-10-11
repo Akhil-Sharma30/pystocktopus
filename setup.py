@@ -62,6 +62,10 @@ setup(
         ],
     },
     packages=["pystocktopus"],
-    entry_points = {"console_scripts":["pystocktopus=pystocktopus.__main__:main"]},
     include_package_data=True,
+    entry_points={
+        "console_scripts": [
+            "pystocktopus=pystocktopus.GUI:main",
+        ],
+    },
 )
