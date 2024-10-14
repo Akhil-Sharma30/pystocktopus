@@ -7,10 +7,10 @@ import csv
 import tkinter as tk
 from tkcalendar import DateEntry
 
-from core import StockExtractor
-from news_analysis import News
-from stock_forecasting import ModelStockData
-from stock_csv import CSVDataHandler
+from .core import StockExtractor
+from .news_analysis import News
+from .stock_forecasting import ModelStockData
+from .stock_csv import CSVDataHandler
 from tkinter import filedialog, messagebox
 import threading
 
