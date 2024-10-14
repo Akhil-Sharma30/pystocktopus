@@ -3,8 +3,17 @@ from __future__ import annotations
 
 import csv
 import os
+import logging  # Import logging module
 
 import pandas as pd
+
+# Configure logging
+logging.basicConfig(
+    filename="csv_data_handler.log",  # Log file name
+    filemode="a",  # Append to the log file
+    format="%(asctime)s - %(levelname)s - %(message)s",  # Log format
+    level=logging.INFO,  # Log level
+)
 
 
 class CSVDataHandler:
@@ -24,6 +33,7 @@ class CSVDataHandler:
         data_values: list[str] = []
 
         try:
+            logging.info(f"Attempting to read column '{csv_stock_column_name}' from CSV file: {csv_file}")
             with open(csv_file) as file:
                 csv_reader = csv.reader(file)
 
@@ -40,16 +50,22 @@ class CSVDataHandler:
 
                 # Check if the column was found
                 if data_column_index == -1:
-                    raise f"No {csv_stock_column_name} column found."
+                    raise ValueError(f"No {csv_stock_column_name} column found.")
+                
+                logging.info(f"Column '{csv_stock_column_name}' found at index {data_column_index}.")
 
                 # Read the data from the specified column
                 for row in csv_reader:
                     if data_column_index < len(row):
                         data_values.append(row[data_column_index])
 
+                logging.info(f"Successfully read {len(data_values)} rows from column '{csv_stock_column_name}'.")
+
         except FileNotFoundError:
-            raise FileNotFoundError
+            logging.error(f"File not found: {csv_file}")
+            raise FileNotFoundError(f"File not found: {csv_file}")
         except Exception as e:
+            logging.error(f"Error reading CSV file: {str(e)}")
             raise e
 
         return data_values
@@ -64,113 +80,88 @@ class CSVDataHandler:
         Returns:
             List[float]: A list of the last values in the dictionary.
         """
-        # Initialize a list to store the last values
+        logging.info("Extracting last values from the closing price dictionary.")
         last_values = []
 
-        # Iterate through the dictionary and extract the last value from each key
         for _key, value_list in closing_price.items():
-            if value_list:  # Check if the list is not empty
+            if value_list:
                 last_value = value_list[-1]
                 last_values.append(last_value)
 
+        logging.info(f"Extracted {len(last_values)} values from closing price dictionary.")
         return last_values
 
-    # Combine the data of the bought shares ticker and closing price values
     @staticmethod
     def combine_data_csv(
         data_values: list[float], close_list: dict[float, float]
     ) -> list[float]:
-        # Fetch the values in the Dict and store it in the list
+        logging.info("Combining data values with closing prices.")
         data_extractor = CSVDataHandler._getValue(close_list)
 
         results: list[float] = []
         for bought, closing_price in zip(data_values, data_extractor):
             results.append(float(bought) * float(closing_price))
+        
+        logging.info(f"Combined data into {len(results)} result values.")
         return results
 
-    # Update the csv with predicted and calculated values
     @staticmethod
     def update_csv(
         csv_path: str, results: list[float], new_column_name: str = "Price Calculated"
     ) -> None:
-        """Combines the data of the bought shares ticker and closing price values.
-
-        Args:
-            data_values (List[float]): A list of the bought shares ticker values.
-            close_list (Dict[float, float]): A dictionary of closing prices.
-
-        Returns:
-            List[float]: A list of the combined values.
-        """
+        """Updates the CSV file with a new column for the calculated values."""
         try:
-            # Read the CSV file into a pandas DataFrame
+            logging.info(f"Updating CSV file: {csv_path} with new column '{new_column_name}'.")
+            
             df = pd.read_csv(csv_path)
-
-            # Create a new column named "Calculated" and assign the values from 'results' to it
             df[new_column_name] = results
 
-            # Write the updated DataFrame back to the CSV file
             df.to_csv(csv_path, index=False)
 
-            print(
-                f"Float values added to the {new_column_name} column in the CSV file."
-            )
+            logging.info(f"Successfully added '{new_column_name}' column with {len(results)} values to the CSV file.")
 
         except FileNotFoundError:
-            raise FileNotFoundError
+            logging.error(f"CSV file not found: {csv_path}")
+            raise FileNotFoundError(f"CSV file not found: {csv_path}")
         except Exception as e:
+            logging.error(f"Error updating CSV file: {str(e)}")
             raise e
 
-    # Store the Closing_List Stock Result in the .CSV file
     @staticmethod
     def close_list_csv(
         ticker_data: dict[str, list[float]],
         closing_data_fieldname: list[str] | None = None,
-        csv_file_name = "stock_data.csv"
+        csv_file_name="stock_data.csv"
     ) -> None:
-        """Stores the closing list stock results in a CSV file.
-
-        Args:
-            ticker_data (Dict[str, List[float]]): A dictionary of ticker symbols and closing prices.
-            closing_data_fieldname (List[str]): A list of the names of the columns to create in the CSV file.
-
-        Raises:
-            ValueError: If the ticker_data dictionary is empty.
-        """
-
+        """Stores the closing list stock results in a CSV file."""
         if closing_data_fieldname is None:
             closing_data_fieldname = ["closing_stock_data"]
+        
         if not ticker_data:
-            return  # Return early if ticker_data is empty
-
-        # Create a CSV file with ticker names as columns
+            logging.warning("Ticker data is empty. No CSV file will be created.")
+            return
 
         try:
+            logging.info(f"Writing closing stock data to CSV file: {csv_file_name}")
             with open(csv_file_name, "w", newline="") as csvfile:
-                # Update fieldnames to include "Date" and columns for each ticker with custom field names
                 fieldnames = ["Date"] + [
-                    f"{field}_{ticker}"
-                    for ticker in ticker_data
-                    for field in closing_data_fieldname
+                    f"{field}_{ticker}" for ticker in ticker_data for field in closing_data_fieldname
                 ]
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+                writer.writeheader()
 
-                writer.writeheader()  # Write the header row
-
-                # Assuming that all lists in ticker_data have the same length
                 num_rows = len(next(iter(ticker_data.values())))
                 for i in range(num_rows):
-                    data_row = {"Date": f"Date_{i + 1}"}  # Add a date identifier
+                    data_row = {"Date": f"Date_{i + 1}"}
                     for ticker, close_list in ticker_data.items():
                         for field in closing_data_fieldname:
                             data_row[f"{field}_{ticker}"] = close_list[i]
                     writer.writerow(data_row)
 
-                # Print success message with file name and path
-                file_path = os.path.abspath(csv_file_name)
-                print(
-                    f"CSV file '{csv_file_name}' created successfully at '{file_path}'"
-                )
+            logging.info(f"CSV file '{csv_file_name}' created successfully with {num_rows} rows.")
+            file_path = os.path.abspath(csv_file_name)
+            logging.info(f"CSV file saved at: {file_path}")
 
         except Exception as e:
+            logging.error(f"Error writing closing list data to CSV: {str(e)}")
             raise e

@@ -12,14 +12,13 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adamax
+from tqdm import tqdm  # Import tqdm for progress bar
 
 ## New implementation for RNN s
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import MinMaxScaler
+from tqdm import tqdm
 
 # Configure logging
 logging.basicConfig(
@@ -60,14 +59,7 @@ class ModelStockData:
             # Scale the data to be between 0 and 1
             scaler = MinMaxScaler()
             data = scaler.fit_transform(data)
-            print(data.shape)
-            # Split the data into training and testing sets
-            # train_size = int(len(data) * 0.8)
-            # train_data = data[:train_size]
-            # print(f'train data ={train_data}')
-            # test_data = data[train_size:]
-            # print(f'test data ={test_data}')
-            # logging.info("Data split into training and test sets successfully.")
+            logging.info("Data shape after scaling: %s", data.shape)
 
             # Create sequences of data for training
             def create_sequences(data, seq_length):
@@ -75,23 +67,11 @@ class ModelStockData:
                 for i in range(len(data) - seq_length):
                     x = data[i : i + seq_length]
                     y = data[i + seq_length]
-                    print("################")
-                    print(len(x), len(y))
+                    logging.debug("Sequence length: %d, Target length: %d", len(x), len(y))
                     sequences.append((x, y))
 
-                print(len(sequences))
+                logging.info("Total sequences created: %d", len(sequences))
                 return np.array(sequences)
-
-            # seq_length = sequence_length
-            # train_sequences = create_sequences(train_data, seq_length)
-            # test_sequences = create_sequences(test_data, seq_length)
-
-            # Separate input sequences (X) and target values (y)
-            # X_train = np.stack(data[:, 0])  # Stack input sequences
-            # y_train = np.stack(data[:, 1])  # Stack target sequences
-
-            # X_test = np.stack(data[:, 0])  # Stack input sequences
-            # y_test = np.stack(data[:, 1])  # Stack target sequences
 
             # Convert NumPy arrays to TensorFlow tensors
             X_tensorflow_train = tf.convert_to_tensor(data, dtype=tf.float32)
@@ -131,6 +111,8 @@ class ModelStockData:
     ) -> None:
         """
         Creates, trains, and fits a Recurrent Neural Network (RNN) model for stock price prediction based on historical stock data.
+
+        Logs the progress of each epoch and the loss, while displaying the progress bar using `tqdm`.
 
         Parameters
         ----------
@@ -183,6 +165,7 @@ class ModelStockData:
 
                     src.append(x)
                     dst.append(y)
+                logging.info("Total sequences for training: %d", len(src))
                 return np.array(src), np.array(dst)
 
             x, y = create_sequences(data)
@@ -201,7 +184,7 @@ class ModelStockData:
             optimizer = optim.Adam(model.parameters(), lr=lr)
 
             # Step 3: Train the RNN model
-            for epoch in range(epochs):
+            for epoch in tqdm(range(epochs), desc="Training RNN model", unit="epoch"):
                 model.train()
                 optimizer.zero_grad()
 
@@ -222,9 +205,6 @@ class ModelStockData:
                     logging.info(
                         f"Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}"
                     )
-
-                # Print epoch and loss every iteration (or adjust frequency as needed)
-                print(f"Epoch [{epoch + 1}/{epochs}], Loss: {loss.item():.4f}")
 
             logging.info("Model fitting completed successfully.")
 
@@ -253,7 +233,7 @@ class ModelStockData:
         except Exception as e:
             logging.error("Error in creating and fitting RNN model: %s", str(e))
             raise
-
+        
     @staticmethod
     def create_and_fit_lstm_model(
         csv_file: str,
@@ -300,75 +280,97 @@ class ModelStockData:
             If any error occurs during model creation, fitting, or prediction.
         """
 
-
-        logging.info("Creating and fitting LSTM model with %d epochs.", epochs)
+        logging.info(f"Creating and fitting LSTM model using data from: {csv_file}")
+        logging.info(f"Parameters: sequence_length={sequence_length}, layers={layers}, epochs={epochs}, lr={lr}, stacked={stacked}")
 
         if lstm_units is None:
             lstm_units = [16]
+            logging.info(f"No LSTM units specified, defaulting to {lstm_units} units per layer.")
 
         try:
-            (
-                X_tensorflow_train,
-                y_tensorflow_train,
-                scaler,
-            ) = ModelStockData._csvDataCollection(
+            # Data preparation
+            logging.info("Starting data collection and preparation.")
+            X_tensorflow_train, y_tensorflow_train, scaler = ModelStockData._csvDataCollection(
                 csv_file, sequence_length, stock_closing_price_column_name
             )
+            logging.info("Data collection completed. Number of training samples: %d", len(X_tensorflow_train))
 
             input_shape = (1, 1)
+            # Model creation
             if stacked is False:
+                logging.info("Creating a single LSTM layer model.")
                 model = Sequential()
                 model.add(LSTM(layers, activation="relu", input_shape=input_shape))
                 model.add(Dense(1))
             else:
+                logging.info("Creating a stacked LSTM model with multiple layers.")
                 model = Sequential()
                 model.add(LSTM(1, activation="relu", input_shape=input_shape))
                 model.add(Dense(1))
 
-            custom_optimizer = Adamax(
-                learning_rate=lr, weight_decay=0.001, epsilon=1e-08
-            )
+            # Compile the model
+            custom_optimizer = Adamax(learning_rate=lr, weight_decay=0.001, epsilon=1e-08)
             model.compile(optimizer=custom_optimizer, loss="mean_squared_error")
+            logging.info("Model compiled with Adamax optimizer and mean squared error loss.")
 
-            # Define a custom callback class to monitor progress
+            # Define a custom callback to log progress
             class ProgressCallback(tf.keras.callbacks.Callback):
                 def on_epoch_end(self, epoch, logs=None):
-                    # Call the progress_callback function if provided
                     if progress_callback:
-                        loss = logs.get("loss")  # Get the loss for the current epoch
+                        loss = logs.get("loss")
                         progress_callback(epoch + 1, loss)  # Update progress
+                        logging.info(f"Epoch {epoch + 1}/{epochs}, Loss: {loss}")
 
-            # Pass the ProgressCallback instance to model.fit
-            model.fit(
-                X_tensorflow_train,
-                y_tensorflow_train,
-                epochs=epochs,
-                callbacks=[ProgressCallback()],
-            )
+            # Initialize tqdm for tracking epochs
+            logging.info(f"Training model for {epochs} epochs with tqdm progress bar.")
+            with tqdm(total=epochs, desc="Training Progress", unit="epoch") as pbar:
 
-            logging.info("Model fitting completed successfully.")
+                class TqdmCallback(tf.keras.callbacks.Callback):
+                    def on_epoch_end(self, epoch, logs=None):
+                        pbar.update(1)  # Update tqdm for each epoch
+                        if logs is not None:
+                            loss = logs.get("loss")
+                            pbar.set_postfix({"Loss": loss})
+                            if progress_callback:
+                                progress_callback(epoch + 1, loss)
+                            logging.info(f"Epoch {epoch + 1}/{epochs}, Loss: {loss}")
 
+                # Fit the model with the TqdmCallback
+                model.fit(
+                    X_tensorflow_train,
+                    y_tensorflow_train,
+                    epochs=epochs,
+                    callbacks=[ProgressCallback(), TqdmCallback()],
+                    verbose=0  # Turn off verbose to avoid interfering with tqdm
+                )
+
+            logging.info("Model training completed successfully.")
+
+            # Predict using the trained model
+            logging.info("Making predictions on training data.")
             predicted_prices = model.predict(X_tensorflow_train)
 
-            # Inverse transform the scaled data to get the actual stock prices
+            # Inverse transform to get actual stock prices
             predicted_prices = scaler.inverse_transform(predicted_prices)
-            mape_values = []
+            logging.info("Inverse transformation of predictions completed.")
 
+            # Calculate MAPE for each prediction
+            mape_values = []
             for i in range(len(X_tensorflow_train)):
                 mape = ModelStockData._mean_absolute_percentage_error(
                     y_tensorflow_train[i], predicted_prices[i]
                 )
                 mape_values.append(mape)
 
+            # Find the index with the minimum MAPE
             min_mape_index = np.argmin(mape_values)
-            logging.info("Lowest MAPE achieved at index %d.", min_mape_index)
+            logging.info("Lowest MAPE achieved at index %d with a value of %.4f.", min_mape_index, mape_values[min_mape_index])
 
             return predicted_prices[min_mape_index][0]
 
         except Exception as e:
-            logging.error("Error in creating and fitting LSTM model: %s", str(e))
+            logging.error(f"Error in creating and fitting LSTM model: {str(e)}")
             raise
-
 
 class DataAnalysis:
     """Class for performing data analysis on stock data."""
