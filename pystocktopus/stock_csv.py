@@ -33,7 +33,9 @@ class CSVDataHandler:
         data_values: list[str] = []
 
         try:
-            logging.info(f"Attempting to read column '{csv_stock_column_name}' from CSV file: {csv_file}")
+            logging.info(
+                f"Attempting to read column '{csv_stock_column_name}' from CSV file: {csv_file}"
+            )
             with open(csv_file) as file:
                 csv_reader = csv.reader(file)
 
@@ -51,15 +53,19 @@ class CSVDataHandler:
                 # Check if the column was found
                 if data_column_index == -1:
                     raise ValueError(f"No {csv_stock_column_name} column found.")
-                
-                logging.info(f"Column '{csv_stock_column_name}' found at index {data_column_index}.")
+
+                logging.info(
+                    f"Column '{csv_stock_column_name}' found at index {data_column_index}."
+                )
 
                 # Read the data from the specified column
                 for row in csv_reader:
                     if data_column_index < len(row):
                         data_values.append(row[data_column_index])
 
-                logging.info(f"Successfully read {len(data_values)} rows from column '{csv_stock_column_name}'.")
+                logging.info(
+                    f"Successfully read {len(data_values)} rows from column '{csv_stock_column_name}'."
+                )
 
         except FileNotFoundError:
             logging.error(f"File not found: {csv_file}")
@@ -88,7 +94,9 @@ class CSVDataHandler:
                 last_value = value_list[-1]
                 last_values.append(last_value)
 
-        logging.info(f"Extracted {len(last_values)} values from closing price dictionary.")
+        logging.info(
+            f"Extracted {len(last_values)} values from closing price dictionary."
+        )
         return last_values
 
     @staticmethod
@@ -101,7 +109,7 @@ class CSVDataHandler:
         results: list[float] = []
         for bought, closing_price in zip(data_values, data_extractor):
             results.append(float(bought) * float(closing_price))
-        
+
         logging.info(f"Combined data into {len(results)} result values.")
         return results
 
@@ -111,14 +119,18 @@ class CSVDataHandler:
     ) -> None:
         """Updates the CSV file with a new column for the calculated values."""
         try:
-            logging.info(f"Updating CSV file: {csv_path} with new column '{new_column_name}'.")
-            
+            logging.info(
+                f"Updating CSV file: {csv_path} with new column '{new_column_name}'."
+            )
+
             df = pd.read_csv(csv_path)
             df[new_column_name] = results
 
             df.to_csv(csv_path, index=False)
 
-            logging.info(f"Successfully added '{new_column_name}' column with {len(results)} values to the CSV file.")
+            logging.info(
+                f"Successfully added '{new_column_name}' column with {len(results)} values to the CSV file."
+            )
 
         except FileNotFoundError:
             logging.error(f"CSV file not found: {csv_path}")
@@ -131,12 +143,12 @@ class CSVDataHandler:
     def close_list_csv(
         ticker_data: dict[str, list[float]],
         closing_data_fieldname: list[str] | None = None,
-        csv_file_name="stock_data.csv"
+        csv_file_name="stock_data.csv",
     ) -> None:
         """Stores the closing list stock results in a CSV file."""
         if closing_data_fieldname is None:
             closing_data_fieldname = ["closing_stock_data"]
-        
+
         if not ticker_data:
             logging.warning("Ticker data is empty. No CSV file will be created.")
             return
@@ -145,7 +157,9 @@ class CSVDataHandler:
             logging.info(f"Writing closing stock data to CSV file: {csv_file_name}")
             with open(csv_file_name, "w", newline="") as csvfile:
                 fieldnames = ["Date"] + [
-                    f"{field}_{ticker}" for ticker in ticker_data for field in closing_data_fieldname
+                    f"{field}_{ticker}"
+                    for ticker in ticker_data
+                    for field in closing_data_fieldname
                 ]
                 writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
                 writer.writeheader()
@@ -158,7 +172,9 @@ class CSVDataHandler:
                             data_row[f"{field}_{ticker}"] = close_list[i]
                     writer.writerow(data_row)
 
-            logging.info(f"CSV file '{csv_file_name}' created successfully with {num_rows} rows.")
+            logging.info(
+                f"CSV file '{csv_file_name}' created successfully with {num_rows} rows."
+            )
             file_path = os.path.abspath(csv_file_name)
             logging.info(f"CSV file saved at: {file_path}")
 

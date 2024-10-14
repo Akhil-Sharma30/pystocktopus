@@ -20,6 +20,7 @@ logging.basicConfig(
     level=logging.INFO,  # Log level
 )
 
+
 class News:
     """Class for handling news data."""
 
@@ -64,7 +65,9 @@ class News:
     @staticmethod
     def new_data_extract(ticker_values, predict_date, days: int = 10):
         """Extracts news articles for a given list of tickers and date range."""
-        logging.info(f"Extracting news data for tickers: {ticker_values} from {predict_date} for {days} days.")
+        logging.info(
+            f"Extracting news data for tickers: {ticker_values} from {predict_date} for {days} days."
+        )
         load_dotenv()
 
         try:
@@ -85,11 +88,13 @@ class News:
                     from_param=start_date,
                     to=end_date,
                     language="en",
-                    sort_by="relevancy"
+                    sort_by="relevancy",
                 )
 
                 # Log the number of articles fetched
-                logging.info(f"Fetched {len(all_articles.get('articles', []))} articles for {ticker}.")
+                logging.info(
+                    f"Fetched {len(all_articles.get('articles', []))} articles for {ticker}."
+                )
 
                 # Store the result in the dictionary
                 results_dict[ticker] = all_articles
@@ -128,8 +133,12 @@ class News:
                         positive += 1
 
                 # Store the analysis results in the dictionary
-                analysis_results[ticker] = "NEGATIVE" if negative >= positive else "POSITIVE"
-                logging.info(f"Sentiment for {ticker}: {'NEGATIVE' if negative >= positive else 'POSITIVE'}")
+                analysis_results[ticker] = (
+                    "NEGATIVE" if negative >= positive else "POSITIVE"
+                )
+                logging.info(
+                    f"Sentiment for {ticker}: {'NEGATIVE' if negative >= positive else 'POSITIVE'}"
+                )
 
             return analysis_results
 

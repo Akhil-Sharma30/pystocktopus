@@ -27,7 +27,7 @@ class StockExtractor:
         timespan: str,
         multiplier: int,
         user_date: str,
-        days: int
+        days: int,
     ) -> list[float]:
         """Extracts stock data closing price from Polygon.io.
 
@@ -80,7 +80,11 @@ class StockExtractor:
 
                     # Store the close_list in the dictionary with ticker as the key
                     ticker_data[ticker] = close_list
-                    logging.info("Collected %d data points for ticker: %s", len(close_list), ticker)
+                    logging.info(
+                        "Collected %d data points for ticker: %s",
+                        len(close_list),
+                        ticker,
+                    )
                 else:
                     logging.warning("No results found for ticker: %s", ticker)
 
@@ -111,8 +115,12 @@ class PastDays:
             # Calculate the start_date by subtracting the days_lag from the end_date
             start_date = end_date - datetime.timedelta(days=days_lag)
 
-            logging.info("Calculated start date: %s from end date: %s with a lag of %d days",
-                         start_date.strftime("%Y-%m-%d"), start_date_str, days_lag)
+            logging.info(
+                "Calculated start date: %s from end date: %s with a lag of %d days",
+                start_date.strftime("%Y-%m-%d"),
+                start_date_str,
+                days_lag,
+            )
 
             # Return the start_date as a string in the format "YYYY-MM-DD"
             return start_date.strftime("%Y-%m-%d")

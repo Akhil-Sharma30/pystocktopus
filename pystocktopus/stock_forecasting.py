@@ -67,7 +67,9 @@ class ModelStockData:
                 for i in range(len(data) - seq_length):
                     x = data[i : i + seq_length]
                     y = data[i + seq_length]
-                    logging.debug("Sequence length: %d, Target length: %d", len(x), len(y))
+                    logging.debug(
+                        "Sequence length: %d, Target length: %d", len(x), len(y)
+                    )
                     sequences.append((x, y))
 
                 logging.info("Total sequences created: %d", len(sequences))
@@ -128,7 +130,7 @@ class ModelStockData:
             The number of RNN layers in the model (default is 4).
         progress_callback : callable, optional
             A callback function that will be called at the end of each epoch with the current epoch number and loss value.
-        stock_closing_price_column_name : str, 
+        stock_closing_price_column_name : str,
             The column name in the CSV file representing the stock's closing price.
 
         Returns
@@ -233,7 +235,7 @@ class ModelStockData:
         except Exception as e:
             logging.error("Error in creating and fitting RNN model: %s", str(e))
             raise
-        
+
     @staticmethod
     def create_and_fit_lstm_model(
         csv_file: str,
@@ -281,19 +283,28 @@ class ModelStockData:
         """
 
         logging.info(f"Creating and fitting LSTM model using data from: {csv_file}")
-        logging.info(f"Parameters: sequence_length={sequence_length}, layers={layers}, epochs={epochs}, lr={lr}, stacked={stacked}")
+        logging.info(
+            f"Parameters: sequence_length={sequence_length}, layers={layers}, epochs={epochs}, lr={lr}, stacked={stacked}"
+        )
 
         if lstm_units is None:
             lstm_units = [16]
-            logging.info(f"No LSTM units specified, defaulting to {lstm_units} units per layer.")
+            logging.info(
+                f"No LSTM units specified, defaulting to {lstm_units} units per layer."
+            )
 
         try:
             # Data preparation
             logging.info("Starting data collection and preparation.")
-            X_tensorflow_train, y_tensorflow_train, scaler = ModelStockData._csvDataCollection(
-                csv_file, sequence_length, stock_closing_price_column_name
+            X_tensorflow_train, y_tensorflow_train, scaler = (
+                ModelStockData._csvDataCollection(
+                    csv_file, sequence_length, stock_closing_price_column_name
+                )
             )
-            logging.info("Data collection completed. Number of training samples: %d", len(X_tensorflow_train))
+            logging.info(
+                "Data collection completed. Number of training samples: %d",
+                len(X_tensorflow_train),
+            )
 
             input_shape = (1, 1)
             # Model creation
@@ -309,9 +320,13 @@ class ModelStockData:
                 model.add(Dense(1))
 
             # Compile the model
-            custom_optimizer = Adamax(learning_rate=lr, weight_decay=0.001, epsilon=1e-08)
+            custom_optimizer = Adamax(
+                learning_rate=lr, weight_decay=0.001, epsilon=1e-08
+            )
             model.compile(optimizer=custom_optimizer, loss="mean_squared_error")
-            logging.info("Model compiled with Adamax optimizer and mean squared error loss.")
+            logging.info(
+                "Model compiled with Adamax optimizer and mean squared error loss."
+            )
 
             # Define a custom callback to log progress
             class ProgressCallback(tf.keras.callbacks.Callback):
@@ -341,7 +356,7 @@ class ModelStockData:
                     y_tensorflow_train,
                     epochs=epochs,
                     callbacks=[ProgressCallback(), TqdmCallback()],
-                    verbose=0  # Turn off verbose to avoid interfering with tqdm
+                    verbose=0,  # Turn off verbose to avoid interfering with tqdm
                 )
 
             logging.info("Model training completed successfully.")
@@ -364,13 +379,18 @@ class ModelStockData:
 
             # Find the index with the minimum MAPE
             min_mape_index = np.argmin(mape_values)
-            logging.info("Lowest MAPE achieved at index %d with a value of %.4f.", min_mape_index, mape_values[min_mape_index])
+            logging.info(
+                "Lowest MAPE achieved at index %d with a value of %.4f.",
+                min_mape_index,
+                mape_values[min_mape_index],
+            )
 
             return predicted_prices[min_mape_index][0]
 
         except Exception as e:
             logging.error(f"Error in creating and fitting LSTM model: {str(e)}")
             raise
+
 
 class DataAnalysis:
     """Class for performing data analysis on stock data."""
