@@ -7,10 +7,10 @@ import csv
 import tkinter as tk
 from tkcalendar import DateEntry
 
-from .core import StockExtractor
-from .news_analysis import News
-from .stock_forecasting import ModelStockData
-from .stock_csv import CSVDataHandler
+from core import StockExtractor
+from news_analysis import News
+from stock_forecasting import ModelStockData
+from stock_csv import CSVDataHandler
 from tkinter import filedialog, messagebox
 import threading
 
@@ -81,20 +81,41 @@ def main():
         start_entry = DateEntry(date_frame, date_pattern='yyyy-mm-dd')  # Set the date format
         start_entry.grid(row=0, column=1, padx=5, pady=5)
 
+        # Define default values for the entries
+        default_values = ["GOOGL", "day", "1", "340"]
+
         # Frame for Name Entries
         name_frame = tk.Frame(root)
         name_frame.pack(pady=10)
 
-        name_labels = ["Ticker Name:", "Timespan:", "Multiplier:"]
+        name_labels = ["Ticker Name (Optional):", "Timespan (Optional):", "Multiplier (Optional):", "Number of Days (Optional):"]
         name_entries = []
+
         for i, name in enumerate(name_labels):
             lbl = tk.Label(name_frame, text=name)
             lbl.grid(row=i, column=0, padx=5, pady=5, sticky='e')
+            
             entry = tk.Entry(name_frame)
+            entry.insert(0, default_values[i])  # Insert default value
             entry.grid(row=i, column=1, padx=5, pady=5)
             name_entries.append(entry)
 
-    # Function to generate CSV
+
+        # Frame for filename entry
+        filename_frame = tk.Frame(root)
+        filename_frame.pack(pady=10)
+        
+        filename_label = tk.Label(filename_frame, text="CSV Filename (optional):")
+        filename_label.grid(row=0, column=0, padx=5, pady=5, sticky='e')
+        
+        filename_entry = tk.Entry(filename_frame)
+        filename_entry.insert(0, "GUI_GENERATED_DATA.csv")  # Default value
+        filename_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        result_label = tk.Label(root, text="", font=("Arial", 12), fg="red")
+        result_label.pack(pady=10)
+
+        # Function to generate CSV
         def generate_csv():
             start_date_str = start_entry.get()
             names = [entry.get() for entry in name_entries]
@@ -102,7 +123,6 @@ def main():
 
             # Validate date format
             try:
-                # start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
                 start_date = start_date_str
             except ValueError:
                 messagebox.showerror("Error", "Please enter dates in YYYY-MM-DD format.")
@@ -113,17 +133,16 @@ def main():
                 messagebox.showerror("Error", "Please enter all three names.")
                 return
 
-            # Define CSV filename
-            filename = "GUI_GENERATED_DATA.csv"
+            # Get filename from entry or use the default
+            filename = filename_entry.get().strip() or "GUI_GENERATED_DATA.csv"
 
             # Write data to CSV
             try:
                 print(start_date)
-                data = StockExtractor.ticker_data_collection([names[0]],names[1],int(names[2]),start_date.strip())
+                data = StockExtractor.ticker_data_collection(ticker_values=[names[0]], timespan=names[1], multiplier=int(names[2]), user_date=start_date.strip(), days=int(names[3]))
                 print(data)
-
                 CSVDataHandler.close_list_csv(data, csv_file_name=filename)
-                messagebox.showinfo("Success", f"CSV file '{filename}' has been generated successfully.")
+                result_label.config(text=f"Success: CSV file '{filename}' has been generated successfully.",fg="green")
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to generate CSV file. Error: {e}")
 
@@ -148,8 +167,11 @@ def main():
         name_frame.pack(pady=10)
 
         # List of name labels
-        name_labels = ["Epochs:", "Learning Rate:", "Stock Closing Price Column Name in CSV:"]
+        name_labels = ["Epochs (optional):", "Learning Rate (optional):", "Stock Closing Price Column Name in CSV:"]
         name_entries = []
+
+        result_label = tk.Label(root, text="", font=("Arial", 12), fg="red")
+        result_label.pack(pady=10)
 
         # Create labels and entry fields for each name, setting default value
         for i, name in enumerate(name_labels):
@@ -163,6 +185,8 @@ def main():
                 entry.insert(0, "650")
             if i == 1:  
                 entry.insert(0, "0.0008")
+            if i == 2:
+                entry.insert(0,"Your stock column names")
 
             entry.grid(row=i, column=1, padx=5, pady=5)
             name_entries.append(entry)
@@ -220,7 +244,7 @@ def main():
                     progress_label.config(text="Training started...")
 
                     # Mockup of a training process
-                    prediction = ModelStockData.create_and_fit_lstm_model(
+                    prediction = ModelStockData.create_fit_train_rnn(
                         csv_file=file,
                         epochs=epochs,
                         lr=lr,
@@ -230,7 +254,8 @@ def main():
 
                     # When training completes
                     progress_label.config(text="Training complete.")
-                    messagebox.showinfo("Success", f"News analysis completed using file: {prediction}")
+                    result_label.config(text=f"News analysis completed: {prediction}", fg="green")
+
                 except Exception as e:
                     progress_label.config(text="Training failed.")
                     messagebox.showerror("Error", f"An error occurred during analysis: {e}")
@@ -276,8 +301,12 @@ def main():
         start_date_entry.grid(row=0, column=1, padx=5, pady=5)
 
         # List of two name labels: Stock Name and Time stamp
-        name_labels = ["Stock Name:", "Time stamp:"]
+        name_labels = ["Stock Name:", "Time stamp (optional):"]
         name_entries = []
+
+        # Label to display results or errors
+        result_label = tk.Label(root, text="", font=("Arial", 12), fg="red")
+        result_label.pack(pady=10)
 
         # Create labels and entry fields for each name, setting default value for Time stamp
         for i, name in enumerate(name_labels):
@@ -286,9 +315,11 @@ def main():
 
             entry = tk.Entry(name_frame)
 
-            # Set default value for Time stamp to "20"
+            # Set default value 
+            if i == 0:
+                entry.insert(0, "NSE")
             if i == 1:
-                entry.insert(0, "20")  # Default value for Time stamp
+                entry.insert(0, "25")  
 
             entry.grid(row=i, column=1, padx=5, pady=5)
             name_entries.append(entry)
@@ -316,7 +347,23 @@ def main():
                 ans = News.news_predict_analysis(result)
                 print(ans)
                 sentiment = list(ans.values())[0]
-                messagebox.showinfo("Success", f"News analysis completed: {sentiment}")
+                
+                # Highlighting message based on sentiment
+                if sentiment == "POSITIVE":
+                    result_label.config(
+                        text="WARNING (AT YOUR OWN RISK): The Article shows NEGATIVE Signs of buying at presently, But POSITIVE Signs OF selling.",
+                        fg="white",
+                        bg="red",  # Highlighting the message with red background for warning
+                        font=("Arial", 12, "bold")
+                    )
+                else:
+                    result_label.config(
+                        text="WARNING (AT YOUR OWN RISK): The Article shows POSITIVE Signs of buying at presently, But NEGATIVE Signs OF selling.",
+                        fg="white",
+                        bg="yellow",  # Highlighting the message with yellow background for caution
+                        font=("Arial", 12, "bold")
+                    )
+
             except Exception as e:
                 messagebox.showerror("Error", f"An error occurred during analysis: {e}")
 
@@ -324,7 +371,6 @@ def main():
         analyze_button = tk.Button(root, text="Analyze News", command=analyze_news, width=20)
         analyze_button.pack(pady=10)
 
-        # Back button to return to the welcome screen
         back_button = tk.Button(root, text="Back", command=show_welcome_screen, width=10)
         back_button.pack(pady=10)
 
@@ -356,6 +402,10 @@ def main():
         # Submit button
         submit_button = tk.Button(root, text="Submit", command=submit_keys, width=20)
         submit_button.pack(pady=20)
+
+        # Back button to return to the welcome screen
+        back_button = tk.Button(root, text="Back", command=show_welcome_screen, width=10)
+        back_button.pack(pady=10)
 
     # Run the application
     root.mainloop()
