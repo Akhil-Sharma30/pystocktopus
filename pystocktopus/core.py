@@ -14,7 +14,7 @@ class StockExtractor:
     """Extracts stock data from Polygon.io."""
 
     def ticker_data_collection(
-        ticker_values: list[str], timespan: str, multiplier: int, user_date: str, days = 500
+        ticker_values: list[str], timespan: str, multiplier: int, user_date: str, days: int
     ) -> list[float]:
         """Extracts stock data closing price from Polygon.io.
 
