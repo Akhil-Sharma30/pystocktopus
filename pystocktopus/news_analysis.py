@@ -73,6 +73,7 @@ class News:
         Args:
             ticker_values (List[str]): A list of ticker values to extract news articles for.
             predict_date (str): The date to predict news articles for.
+            days (str): Starting date - {till the date you want to calculate news}
 
         Returns:
             Dict[str, str]: A dictionary of news articles for each ticker.
@@ -92,12 +93,12 @@ class News:
         for ticker in ticker_values:
             all_articles = newsapi.get_everything(
                 q=ticker,
-                sources="bbc-news,the-verge",
                 from_param=start_date,
                 to=end_date,
                 language="en",
-                sort_by="relevancy",
-            )
+                sort_by="relevancy"
+        )
+
 
             # Store the result in the dictionary
             results_dict[ticker] = all_articles
@@ -118,7 +119,7 @@ class News:
         # Initialize the text classification pipeline
         pipe = pipeline(
             "text-classification",
-            model="distilbert-base-uncased-finetuned-sst-2-english",
+            model="MonoHime/rubert-base-cased-sentiment-new",
         )
 
         # Initialize a dictionary to store the analysis results
