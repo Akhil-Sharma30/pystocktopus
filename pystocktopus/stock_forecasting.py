@@ -1,5 +1,6 @@
 # Copyright (c) 2023 Akhil Sharma. All rights reserved.
 from __future__ import annotations
+
 import logging  # Import the logging module
 
 import mplfinance as fplt
@@ -7,18 +8,17 @@ import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
 import tensorflow as tf
+
+## New implementation for RNN s
+import torch
+import torch.nn as nn
+import torch.optim as optim
 from plotly.subplots import make_subplots
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adamax
 from tqdm import tqdm  # Import tqdm for progress bar
-
-## New implementation for RNN s
-import torch
-import torch.nn as nn
-import torch.optim as optim
-from tqdm import tqdm
 
 # Configure logging
 logging.basicConfig(
@@ -32,7 +32,7 @@ logging.basicConfig(
 # Define a simple RNN class using PyTorch
 class RNN(nn.Module):
     def __init__(self, input_size, hidden_size, output_size, num_layers):
-        super(RNN, self).__init__()
+        super().__init__()
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True)
@@ -388,7 +388,7 @@ class ModelStockData:
             return predicted_prices[min_mape_index][0]
 
         except Exception as e:
-            logging.error(f"Error in creating and fitting LSTM model: {str(e)}")
+            logging.error(f"Error in creating and fitting LSTM model: {e!s}")
             raise
 
 
