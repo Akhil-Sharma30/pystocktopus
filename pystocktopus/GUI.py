@@ -1,18 +1,17 @@
-import tkinter as tk
-from tkinter import messagebox
+from __future__ import annotations
+
 import os
-from dotenv import load_dotenv
-from datetime import datetime
-import csv
+import threading
 import tkinter as tk
+from tkinter import filedialog, messagebox
+
+from dotenv import load_dotenv
 from tkcalendar import DateEntry
 
 from .core import StockExtractor
 from .news_analysis import News
-from .stock_forecasting import ModelStockData
 from .stock_csv import CSVDataHandler
-from tkinter import filedialog, messagebox
-import threading
+from .stock_forecasting import ModelStockData
 
 
 def main():
