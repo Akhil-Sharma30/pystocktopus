@@ -1,15 +1,14 @@
 # Copyright (c) 2023 Akhil Sharma. All rights reserved.
 from __future__ import annotations
 
-from datetime import datetime, timedelta
 import logging
 import os
+from datetime import datetime, timedelta
 from typing import List
-from dotenv import load_dotenv
 
 import pandas as pd
+from dotenv import load_dotenv
 from newsapi import NewsApiClient
-from pystocktopus.config import news_api
 from transformers import pipeline
 
 # Set up logging configuration
