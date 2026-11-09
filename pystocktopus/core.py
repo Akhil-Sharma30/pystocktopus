@@ -3,12 +3,11 @@ from __future__ import annotations
 
 import datetime
 import json
-import os
 import logging
-from polygon import RESTClient
-from dotenv import load_dotenv
+import os
 
-import pystocktopus.config as config
+from dotenv import load_dotenv
+from polygon import RESTClient
 
 # Configure logging
 logging.basicConfig(
