@@ -1,10 +1,13 @@
+from __future__ import annotations
+
+import logging
+
 import config
+import pandas as pd
 from core import StockExtractor
+from news_analysis import News
 from stock_csv import CSVDataHandler
 from stock_forecasting import ModelStockData
-import pandas as pd
-from news_analysis import News
-import logging
 
 # Set up logging configuration
 logging.basicConfig(
@@ -25,7 +28,7 @@ def main():
         )
         logging.info(f"Stock data collected for tickers: {ticker_values}")
     except Exception as e:
-        logging.error(f"Error collecting stock data: {str(e)}")
+        logging.error(f"Error collecting stock data: {e!s}")
 
     try:
         CSVDataHandler.close_list_csv(data)
@@ -36,7 +39,7 @@ def main():
         )
         logging.info(f"CSV data combined successfully: {result}")
     except Exception as e:
-        logging.error(f"Error handling CSV data: {str(e)}")
+        logging.error(f"Error handling CSV data: {e!s}")
 
     try:
         df = pd.read_csv("Your-CSV-FilePath")
@@ -46,7 +49,7 @@ def main():
         second_column_name = df.columns[1]
         logging.info(f"Second column name: {second_column_name}")
     except Exception as e:
-        logging.error(f"Error reading CSV file: {str(e)}")
+        logging.error(f"Error reading CSV file: {e!s}")
 
     try:
         prediction = ModelStockData.create_fit_train_rnn(
@@ -56,7 +59,7 @@ def main():
         )
         logging.info(f"Model training and prediction complete: {prediction}")
     except Exception as e:
-        logging.error(f"Error in model training or prediction: {str(e)}")
+        logging.error(f"Error in model training or prediction: {e!s}")
 
     try:
         result = News.new_data_extract(ticker_values=Article, predict_date=predict)
@@ -65,7 +68,7 @@ def main():
         ans = News.news_predict_analysis(result)
         logging.info(f"News analysis result: {ans}")
     except Exception as e:
-        logging.error(f"Error in news analysis: {str(e)}")
+        logging.error(f"Error in news analysis: {e!s}")
 
     try:
         News.create_csv_with_predictions(
@@ -73,7 +76,7 @@ def main():
         )
         logging.info("CSV file created with predictions.")
     except Exception as e:
-        logging.error(f"Error creating CSV with predictions: {str(e)}")
+        logging.error(f"Error creating CSV with predictions: {e!s}")
 
 
 if __name__ == "__main__":
