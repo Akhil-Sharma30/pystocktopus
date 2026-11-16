@@ -2,8 +2,8 @@
 from __future__ import annotations
 
 import csv
-import os
 import logging  # Import logging module
+import os
 
 import pandas as pd
 
@@ -71,7 +71,7 @@ class CSVDataHandler:
             logging.error(f"File not found: {csv_file}")
             raise FileNotFoundError(f"File not found: {csv_file}")
         except Exception as e:
-            logging.error(f"Error reading CSV file: {str(e)}")
+            logging.error(f"Error reading CSV file: {e!s}")
             raise e
 
         return data_values
@@ -136,7 +136,7 @@ class CSVDataHandler:
             logging.error(f"CSV file not found: {csv_path}")
             raise FileNotFoundError(f"CSV file not found: {csv_path}")
         except Exception as e:
-            logging.error(f"Error updating CSV file: {str(e)}")
+            logging.error(f"Error updating CSV file: {e!s}")
             raise e
 
     @staticmethod
@@ -179,5 +179,5 @@ class CSVDataHandler:
             logging.info(f"CSV file saved at: {file_path}")
 
         except Exception as e:
-            logging.error(f"Error writing closing list data to CSV: {str(e)}")
+            logging.error(f"Error writing closing list data to CSV: {e!s}")
             raise e
